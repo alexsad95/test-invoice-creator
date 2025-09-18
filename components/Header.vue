@@ -9,9 +9,9 @@ const selectedLanguage = ref<'English' | 'Русский' | 'Română'>('English
 </script>
 
 <template>
-  <header class="bg-background py-4 px-8 shadow-2xl">
+  <header class="bg-background py-4 shadow-2xl">
     <div class="container mx-auto px-4">
-      <div class="flex justify-between items-center h-16 max-w-7xl mx-auto">
+      <div class="flex justify-between items-center h-16 max-w-8xl mx-auto">
         <!-- Левая секция: валюта, язык, обмен -->
         <div class="flex items-center space-x-4">
           <!-- Селектор валюты -->

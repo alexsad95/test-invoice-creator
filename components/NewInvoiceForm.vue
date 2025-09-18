@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { reactive, computed } from 'vue';
-import type { InvoiceFormData } from '~/types';
+import { reactive, computed, ref } from 'vue';
+import type { InvoiceFormData, InvoiceItem } from '~/types';
 import { formatNumber } from '~/lib/utils/format';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
@@ -9,45 +9,44 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~
 import { Textarea } from '~/components/ui/textarea';
 import { Card, CardContent } from '~/components/ui/card';
 
+const isSelectorOpen = ref(false);
 const invoiceData = reactive<InvoiceFormData>({
-  invoiceNumber: '254267225',
+  invoiceNumber: '',
   issueDate: '2024-09-07',
   dueDate: '2024-09-07',
-  from: 'Boris Expert',
+  from: '',
   to: 'General Construct',
-  discount: 10,
-  discountPercent: 10,
-  bankAccount: '41399128191019',
+  discount: 0,
+  bankAccount: '',
   notes: '',
   items: [
-    {
-      description: 'Services of Marketing',
-      quantity: 1,
-      uoM: 'none',
-      pricePerUnit: 24000,
-      vat: '15%',
-      amount: 27000,
-    },
-    {
-      description: 'Logo',
-      quantity: 2,
-      uoM: 'none',
-      pricePerUnit: 24000,
-      vat: '15%',
-      amount: 27000,
-    },
-    {
-      description: 'Sirius Skells',
-      quantity: 15,
-      uoM: 'kg',
-      pricePerUnit: 24000,
-      vat: '15%',
-      amount: 27000,
-    },
+    // {
+    //   description: 'Services of Marketing',
+    //   quantity: 1,
+    //   uoM: 'none',
+    //   pricePerUnit: 24000,
+    //   vat: '15%',
+    //   amount: 27000,
+    // },
+    // {
+    //   description: 'Logo',
+    //   quantity: 2,
+    //   uoM: 'none',
+    //   pricePerUnit: 24000,
+    //   vat: '15%',
+    //   amount: 27000,
+    // },
+    // {
+    //   description: 'Sirius Skells',
+    //   quantity: 15,
+    //   uoM: 'kg',
+    //   pricePerUnit: 24000,
+    //   vat: '15%',
+    //   amount: 27000,
+    // },
   ],
 });
 
-// Computed properties for financial calculations
 const subtotal = computed((): number => {
   return invoiceData.items.reduce((sum, item) => sum + (item.amount || 0), 0);
 });
@@ -57,16 +56,57 @@ const vat = computed((): number => {
 });
 
 const total = computed((): number => {
-  const discountAmount = subtotal.value * (invoiceData.discountPercent / 100);
+  const discountAmount = subtotal.value * (invoiceData.discount / 100);
   return subtotal.value + vat.value - discountAmount;
 });
+
+const addNewLine = () => {
+  const newItem = {
+    name: '',
+    quantity: 0,
+    uoM: 'none',
+    pricePerUnit: 0,
+    vat: '0%',
+    amount: 0,
+  };
+
+  invoiceData.items.push(newItem);
+};
+
+const deleteLine = (index: number) => {
+  invoiceData.items.splice(index, 1);
+};
+
+const addDescription = () => {
+  if (invoiceData.items.length > 0) {
+    const lastIndex = invoiceData.items.length - 1;
+    const lastItem = invoiceData.items[lastIndex];
+    if (lastItem && !lastItem.description) {
+      lastItem.description = '';
+    }
+  }
+
+  isSelectorOpen.value = false;
+};
+
+const addDiscount = () => {
+  if (invoiceData.items.length > 0) {
+    const lastIndex = invoiceData.items.length - 1;
+    const lastItem = invoiceData.items[lastIndex];
+    if (lastItem && lastItem.discount === undefined) {
+      lastItem.discount = 0;
+    }
+  }
+
+  isSelectorOpen.value = false;
+};
 </script>
 
 <template>
   <div class="space-y-6">
     <!-- Заголовок с кнопкой назад -->
     <div class="flex items-center space-x-3">
-      <Button size="lg" class="bg-black hover:bg-black/80 text-primary-foreground w-10 h-10 rounded-full">
+      <Button size="lg" class="bg-black hover:bg-black/90 text-primary-foreground w-10 h-10 rounded-full">
         <svg class="w-5 h-5" viewBox="0 0 20 16" fill="none">
           <path d="M1 8H19H1Z" fill="currentColor"/>
           <path d="M8 15L1 8M1 8L8 1M1 8H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -102,8 +142,8 @@ const total = computed((): number => {
           <div class="w-full">
             <Label class="block text-sm font-medium mb-1">Issue date</Label>
             <Input
-            v-model="invoiceData.issueDate"
-            type="date"
+              v-model="invoiceData.issueDate"
+              type="date"
             />
           </div>
           
@@ -149,123 +189,197 @@ const total = computed((): number => {
     <div class="space-y-4">
       <h2 class="text-lg font-bold text-foreground">Products and services</h2>
       
-      <!-- Таблица товаров -->
-      <div class="overflow-x-auto">
-        <table class="w-full">
+        <!-- Таблица товаров -->
+        <div v-if="invoiceData.items.length > 0" class="overflow-x-auto -ml-4">
+          <table class="w-full">
           <thead>
-            <tr class="border-b border-border">
-              <th class="text-left py-2 text-sm font-medium text-foreground w-8"></th>
-              <th class="text-left py-2 text-sm font-medium text-foreground">Description</th>
-              <th class="text-left py-2 text-sm font-medium text-foreground w-20">Quantity</th>
-              <th class="text-left py-2 text-sm font-medium text-foreground w-20">UoM</th>
-              <th class="text-left py-2 text-sm font-medium text-foreground w-24">Price/Unit</th>
-              <th class="text-left py-2 text-sm font-medium text-foreground w-20">Vat</th>
-              <th class="text-left py-2 text-sm font-medium text-foreground w-24">Amount</th>
-              <th class="text-left py-2 text-sm font-medium text-foreground w-8"/>
+            <tr>
+              <th class="text-left p-1 text-sm font-medium text-foreground w-3"/>
+              <th class="text-left p-1 text-sm font-medium text-foreground w-60">Name</th>
+              <th class="text-left p-1 text-sm font-medium text-foreground w-20">Quantity</th>
+              <th class="text-left p-1 text-sm font-medium text-foreground w-20">UoM</th>
+              <th class="text-left p-1 text-sm font-medium text-foreground w-24">Price/Unit</th>
+              <th class="text-left p-1 text-sm font-medium text-foreground w-20">Vat</th>
+              <th class="text-left p-1 text-sm font-medium text-foreground w-24">Amount</th>
+              <th class="text-left p-1 text-sm font-medium text-foreground w-8"/>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) in invoiceData.items" :key="index" class="border-b border-border/50">
-              <td class="py-2 text-sm text-muted-foreground">{{ index + 1 }}</td>
-              <td class="py-2">
-                <Input
-                  v-model="item.description"
-                  type="text"
-                  class="h-8 text-sm"
-                  :placeholder="index === 0 ? 'Services of Marketing' : ''"
-                />
-              </td>
-              <td class="py-2">
-                <Input
-                  v-model="item.quantity"
-                  type="number"
-                  class="h-8 text-sm font-raleway"
-                  :placeholder="index === 0 ? '1' : ''"
-                />
-              </td>
-              <td class="py-2">
-                <Select v-model="item.uoM">
-                  <SelectTrigger class="h-8 text-sm">
-                    <SelectValue placeholder="UoM" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">-</SelectItem>
-                    <SelectItem value="kg">kg</SelectItem>
-                    <SelectItem value="pcs">pcs</SelectItem>
-                    <SelectItem value="hrs">hrs</SelectItem>
-                  </SelectContent>
-                </Select>
-              </td>
-              <td class="py-2">
-                <Input
-                  v-model="item.pricePerUnit"
-                  type="number"
-                  class="h-8 text-sm"
-                  :placeholder="index === 0 ? '24000' : ''"
-                />
-              </td>
-              <td class="py-2">
-                <Select v-model="item.vat">
-                  <SelectTrigger class="h-8 text-sm">
-                    <SelectValue placeholder="VAT" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="0%">0%</SelectItem>
-                    <SelectItem value="15%">15%</SelectItem>
-                    <SelectItem value="20%">20%</SelectItem>
-                  </SelectContent>
-                </Select>
-              </td>
-              <td class="py-2">
-                <Input
-                  v-model="item.amount"
-                  type="number"
-                  class="h-8 text-sm"
-                  :placeholder="index === 0 ? '27000' : ''"
-                />
-              </td>
-              <td class="py-2">
-                <Button variant="ghost" size="sm">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
-                  </svg>
-                </Button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+            <template v-for="(item, index) in invoiceData.items" :key="index">
+              <!-- Основная строка продукта -->
+              <tr class="border-b border-border/50">
+                <td class="text-sm text-muted-foreground font-raleway">{{ index + 1 }}</td>
+                <td class="p-1">
+                  <Input
+                    v-model="item.name"
+                    type="text"
+                    class="h-8 text-sm"
+                    placeholder="Enter product name"
+                  />
+                </td>
+                <td class="p-1">
+                  <Input
+                    v-model="item.quantity"
+                    type="number"
+                    class="h-8 text-sm"
+                  />
+                </td>
+                <td class="p-1">
+                  <Select v-model="item.uoM">
+                    <SelectTrigger class="h-8 w-20 text-sm bg-white text-black">
+                      <SelectValue placeholder="UoM" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">-</SelectItem>
+                      <SelectItem value="kg">kg</SelectItem>
+                      <SelectItem value="pcs">pcs</SelectItem>
+                      <SelectItem value="hrs">hrs</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </td>
+                <td class="p-1">
+                  <Input
+                    v-model="item.pricePerUnit"
+                    type="number"
+                    class="h-8 text-sm"
+                  />
+                </td>
+                <td class="p-1">
+                  <Select v-model="item.vat">
+                    <SelectTrigger class="h-8 w-20 text-sm bg-white text-black">
+                      <SelectValue placeholder="VAT" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0%">0%</SelectItem>
+                      <SelectItem value="15%">15%</SelectItem>
+                      <SelectItem value="20%">20%</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </td>
+                <td class="p-1">
+                  <Input
+                    v-model="item.amount"
+                    type="number"
+                    class="h-8 text-sm"
+                  />
+                </td>
+                <td class="p-1">
+                  <Button 
+                    variant="secondary" 
+                    size="icon" 
+                    class="h-8 border border-input"
+                    @click="deleteLine(index)"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                  </Button>
+                </td>
+              </tr>
 
-      <!-- Поле для добавления описания -->
-      <div class="mt-2">
-        <Input
-          type="text"
-          placeholder="Add description"
-        />
-      </div>
+              <!-- Строка описания для этого продукта -->
+              <tr v-if="item.description !== undefined">
+                <td/>
+                <td colspan="7" class="p-1">
+                  <div class="flex gap-2">
+                    <Textarea
+                      v-model="item.description"
+                      class="resize-none w-full"
+                      rows="2"
+                      placeholder="Add description"
+                    />
+                    <Button 
+                      variant="secondary" 
+                      size="icon" 
+                      class="h-8 border border-input"
+                      @click="item.description = undefined"
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                      </svg>
+                    </Button>
+                  </div>
+                </td>
+              </tr>
 
-      <!-- Секция скидки -->
-      <div class="w-fit">
-        <Label class="block text-sm font-medium mb-1">Discount</Label>
-        <div class="flex">
-          <Input
-            v-model="invoiceData.discount"
-            type="number"
-            class="w-20 rounded-r-none"
-            placeholder="10"
-          />
-          <span class="px-3 py-2 bg-muted text-muted-foreground border border-l-0 border-input rounded-r-md text-sm">%</span>
+              <!-- Строка скидки для этого продукта -->
+              <tr v-if="item.discount !== undefined">
+                <td/>
+                <td colspan="7" class="p-1">
+                  <div class="flex items-center gap-2">
+                    <div class="flex flex-col">
+                      <Label class="block text-sm font-medium mb-1">Discount</Label>
+                      <div class="flex items-center gap-2">
+                        <div class="flex">
+                          <Input
+                          v-model="item.discount"
+                          type="number"
+                          class="h-8 w-20 rounded-r-none"
+                          placeholder="0"
+                          />
+                          <span class="h-8 px-3 py-2 bg-white text-muted-foreground border border-l-0 border-input rounded-r-md text-sm">%</span>
+                        </div>
+                        <Button 
+                          variant="secondary" 
+                          size="icon" 
+                          class="h-8 border border-input"
+                          @click="item.discount = undefined"
+                        >
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                          </svg>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </template>
+            
+
+            </tbody>
+          </table>
         </div>
-      </div>
 
       <!-- Кнопка добавления строки -->
-      <div class="pt-2">
-        <Button variant="outline" size="sm">
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-          </svg>
+      <div class="flex">
+        <!-- Основная кнопка -->
+        <Button variant="outline" class="px-4 py-2 rounded-l-md rounded-r-none border-r-0" @click="addNewLine">
           Add line
         </Button>
+         
+        <!-- Селектор с выпадающим списком -->
+        <div class="relative">
+          <Select :open="isSelectorOpen" @update:open="isSelectorOpen = $event">
+            <SelectTrigger 
+              :disabled="invoiceData.items.length === 0"
+              data-button-style="true" 
+              class="px-2 hover:bg-accent rounded-r-md rounded-l-none [&_svg:last-child]:hidden disabled:cursor-not-allowed"
+              style="border-color: var(--accent-foreground) !important; color: var(--accent-foreground) !important;"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="var(--accent-foreground)" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </SelectTrigger>
+            <SelectContent>
+              <div class="flex flex-col">
+                <button 
+                  class="w-auto text-left p-2 text-sm hover:bg-accent rounded-md transition-colors cursor-pointer"
+                  @click="addDescription"
+                >
+                  Add description
+                </button>
+                <button 
+                  class="w-auto text-left p-2 text-sm hover:bg-accent rounded-md transition-colors cursor-pointer"
+                  @click="addDiscount"
+                >
+                  Add discount
+                </button>
+              </div>
+            </SelectContent>
+          </Select>
+        </div>
+
       </div>
     </div>
 
@@ -307,7 +421,7 @@ const total = computed((): number => {
             <span class="text-sm font-medium text-muted-foreground">Discount %</span>
             <div class="flex">
               <Input
-                v-model="invoiceData.discountPercent"
+                v-model="invoiceData.discount"
                 type="number"
                 class="w-16 h-8 text-sm rounded-r-none"
                 placeholder="10"
@@ -339,11 +453,10 @@ const total = computed((): number => {
 
       <!-- Notes section -->
       <div class="space-y-2">
-        <h3 class="text-sm font-bold text-foreground">Notes (optional)</h3>
+        <Label for="message">Notes (optional)</Label>
         <Textarea
           v-model="invoiceData.notes"
-          class="resize-none"
-          rows="4"
+          class="resize-none h-28"
           placeholder="Add Notes"
         />
         <p class="text-xs text-muted-foreground">The notes will be displayed on the invoice; you can see them on the preview on the right.</p>
