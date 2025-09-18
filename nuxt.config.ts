@@ -21,6 +21,14 @@ export default defineNuxtConfig({
     }
   },
   app: {
+    head: {
+      link: [
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap'
+        }
+      ]
+    },
     baseURL: process.env.NODE_ENV === 'production' ? '/test-invoice-creator/' : '/',
     buildAssetsDir: '/_nuxt/'
   },

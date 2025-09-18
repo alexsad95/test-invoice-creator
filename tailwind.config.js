@@ -18,6 +18,12 @@ export default {
       }
     },
     extend: {
+      fontFamily: {
+        'sans': ['var(--font-sans)'],
+        'serif': ['var(--font-serif)'],
+        'mono': ['var(--font-mono)'],
+        'raleway': ['var(--font-raleway)'],
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
