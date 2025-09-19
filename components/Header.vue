@@ -4,21 +4,21 @@ import { ref } from 'vue';
 import { Button } from '~/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '~/components/ui/select';
 
-const selectedCurrency = ref<"USD" | "EUR" | "MDL">('USD');
-const selectedLanguage = ref<'English' | 'Русский' | 'Română'>('English');
+const selectedCurrency = ref<"usd" | "eur" | "mdl">('usd');
+const selectedLanguage = ref<'en' | 'ru' | 'ro'>('en');
 </script>
 
 <template>
   <header class="bg-background py-4 shadow-2xl">
     <div class="container mx-auto px-4">
       <div class="flex justify-between items-center h-16 max-w-8xl mx-auto">
-        <!-- Левая секция: валюта, язык, обмен -->
+        <!-- Left section: currency, language, exchange -->
         <div class="flex items-center space-x-4">
-          <!-- Селектор валюты -->
+          <!-- Currency selector -->
           <Select v-model="selectedCurrency">
             <SelectTrigger class="w-auto border-1 border-gray-300 bg-transparent shadow-none hover:bg-gray-50">
               <div class="flex items-center space-x-2">
-                <svg v-if="selectedCurrency === 'USD'" viewBox="0 0 640 480">
+                <svg v-if="selectedCurrency === 'usd'" viewBox="0 0 640 480">
                   <g fill-rule="evenodd">
                     <g stroke-width="1pt">
                       <path fill="#bd3d44" d="M0 0h972.8v39.4H0zm0 78.8h972.8v39.4H0zm0 78.7h972.8V197H0zm0 78.8h972.8v39.4H0zm0 78.8h972.8v39.4H0zm0 78.7h972.8v39.4H0zm0 78.8h972.8V512H0z" transform="scale(.9375)"/>
@@ -29,7 +29,7 @@ const selectedLanguage = ref<'English' | 'Русский' | 'Română'>('English
                   </g>
                 </svg>
 
-                <svg v-else-if="selectedCurrency === 'EUR'" viewBox="0 0 640 480">
+                <svg v-else-if="selectedCurrency === 'eur'" viewBox="0 0 640 480">
                   <defs>
                     <g id="d">
                       <g id="b">
@@ -58,7 +58,7 @@ const selectedLanguage = ref<'English' | 'Русский' | 'Română'>('English
                   </g>
                 </svg>
 
-                <svg v-else-if="selectedCurrency === 'MDL'" viewBox="0 0 640 480">
+                <svg v-else-if="selectedCurrency === 'mdl'" viewBox="0 0 640 480">
                   <g fill-rule="evenodd" stroke-width="1pt">
                     <path fill="#00319c" d="M0 0h213.3v480H0z"/>
                     <path fill="#ffde00" d="M213.3 0h213.4v480H213.3z"/>
@@ -133,25 +133,25 @@ const selectedLanguage = ref<'English' | 'Русский' | 'Română'>('English
               </div>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="USD">USD - Доллар США</SelectItem>
-              <SelectItem value="EUR">EUR - Евро</SelectItem>
-              <SelectItem value="MDL">MDL - Молдавский лей</SelectItem>
+              <SelectItem value="usd">USD - US Dollar</SelectItem>
+              <SelectItem value="eur">EUR - Euro</SelectItem>
+              <SelectItem value="mdl">MDL - Moldovan Leu</SelectItem>
             </SelectContent>
           </Select>
 
-          <!-- Селектор языка -->
+          <!-- Selector language -->
           <Select v-model="selectedLanguage">
             <SelectTrigger class="w-auto border-1 border-gray-300 bg-transparent shadow-none hover:bg-gray-50">
               <span class="font-medium">{{ selectedLanguage }}</span>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="English">English</SelectItem>
-              <SelectItem value="Русский">Русский</SelectItem>
-              <SelectItem value="Română">Română</SelectItem>
+              <SelectItem value="en">English</SelectItem>
+              <SelectItem value="ru">Русский</SelectItem>
+              <SelectItem value="ro">Română</SelectItem>
             </SelectContent>
           </Select>
 
-          <!-- Кнопка обмена -->
+          <!-- Exchange button -->
           <Button>
             <svg class="w-4 h-4" viewBox="0 0 16 17" fill="none" >
               <path d="M14.6667 7.66667C14.2058 7.66667 13.8333 8.04 13.8333 8.5C13.8333 11.7167 11.2158 14.3333 8 14.3333C6.46 14.3333 5.0025 13.7167 3.92583 12.6667H6.33333C6.79417 12.6667 7.16667 12.2933 7.16667 11.8333C7.16667 11.3733 6.79417 11 6.33333 11H2.3775C2.2125 10.9658 2.04 10.9858 1.87583 11.0583C1.86083 11.0642 1.845 11.0667 1.83 11.0733C1.81917 11.0792 1.8075 11.0783 1.79667 11.0842C1.77417 11.0975 1.76167 11.1192 1.74 11.1333C1.50083 11.2808 1.33333 11.5325 1.33333 11.8333V16C1.33333 16.46 1.70583 16.8333 2.16667 16.8333C2.6275 16.8333 3 16.46 3 16V14.0667C4.35833 15.2842 6.12917 16 8 16C12.1358 16 15.5 12.635 15.5 8.5C15.5 8.04 15.1275 7.66667 14.6667 7.66667Z" fill="currentColor"/>
@@ -161,9 +161,9 @@ const selectedLanguage = ref<'English' | 'Русский' | 'Română'>('English
           </Button>
         </div>
 
-        <!-- Правая секция: прикрепить файл, сохранить счет -->
+        <!-- Right section: attach file, save invoice -->
         <div class="flex items-center space-x-4">
-          <!-- Кнопка прикрепления файла -->
+          <!-- Attach file button -->
           <Button variant="outline">
             <svg class="w-4 h-4" viewBox="0 0 16 15" fill="none">
               <path d="M14.75 3H14C13.8011 3 13.6103 3.07902 13.4697 3.21967C13.329 3.36032 13.25 3.55109 13.25 3.75C13.25 3.94891 13.329 4.13968 13.4697 4.28033C13.6103 4.42098 13.8011 4.5 14 4.5V12.75C14 12.9489 13.921 13.1397 13.7803 13.2803C13.6397 13.421 13.4489 13.5 13.25 13.5C13.0511 13.5 12.8603 13.421 12.7197 13.2803C12.579 13.1397 12.5 12.9489 12.5 12.75V1.5C12.5 1.10218 12.342 0.720644 12.0607 0.43934C11.7794 0.158035 11.3978 0 11 0H2C1.60218 0 1.22064 0.158035 0.93934 0.43934C0.658035 0.720644 0.5 1.10218 0.5 1.5V12.75C0.5 13.3467 0.737053 13.919 1.15901 14.341C1.58097 14.7629 2.15326 15 2.75 15H13.25C13.8467 15 14.419 14.7629 14.841 14.341C15.2629 13.919 15.5 13.3467 15.5 12.75V3.75C15.5 3.55109 15.421 3.36032 15.2803 3.21967C15.1397 3.07902 14.9489 3 14.75 3ZM2.75 3C2.75 2.80109 2.82902 2.61032 2.96967 2.46967C3.11032 2.32902 3.30109 2.25 3.5 2.25H5.75C5.94891 2.25 6.13968 2.32902 6.28033 2.46967C6.42098 2.61032 6.5 2.80109 6.5 3V5.25C6.5 5.44891 6.42098 5.63968 6.28033 5.78033C6.13968 5.92098 5.94891 6 5.75 6H3.5C3.30109 6 3.11032 5.92098 2.96967 5.78033C2.82902 5.63968 2.75 5.44891 2.75 5.25V3ZM9.5 12.75H3.5C3.30109 12.75 3.11032 12.671 2.96967 12.5303C2.82902 12.3897 2.75 12.1989 2.75 12C2.75 11.8011 2.82902 11.6103 2.96967 11.4697C3.11032 11.329 3.30109 11.25 3.5 11.25H9.5C9.69891 11.25 9.88968 11.329 10.0303 11.4697C10.171 11.6103 10.25 11.8011 10.25 12C10.25 12.1989 10.171 12.3897 10.0303 12.5303C9.88968 12.671 9.69891 12.75 9.5 12.75ZM9.5 10.5H3.5C3.30109 10.5 3.11032 10.421 2.96967 10.2803C2.82902 10.1397 2.75 9.94891 2.75 9.75C2.75 9.55109 2.82902 9.36032 2.96967 9.21967C3.11032 9.07902 3.30109 9 3.5 9H9.5C9.69891 9 9.88968 9.07902 10.0303 9.21967C10.171 9.36032 10.25 9.55109 10.25 9.75C10.25 9.94891 10.171 10.1397 10.0303 10.2803C9.88968 10.421 9.69891 10.5 9.5 10.5ZM9.5 8.25H3.5C3.30109 8.25 3.11032 8.17098 2.96967 8.03033C2.82902 7.88968 2.75 7.69891 2.75 7.5C2.75 7.30109 2.82902 7.11032 2.96967 6.96967C3.11032 6.82902 3.30109 6.75 3.5 6.75H9.5C9.69891 6.75 9.88968 6.82902 10.0303 6.96967C10.171 7.11032 10.25 7.30109 10.25 7.5C10.25 7.69891 10.171 7.88968 10.0303 8.03033C9.88968 8.17098 9.69891 8.25 9.5 8.25ZM9.5 6H8C7.80109 6 7.61032 5.92098 7.46967 5.78033C7.32902 5.63968 7.25 5.44891 7.25 5.25C7.25 5.05109 7.32902 4.86032 7.46967 4.71967C7.61032 4.57902 7.80109 4.5 8 4.5H9.5C9.69891 4.5 9.88968 4.57902 10.0303 4.71967C10.171 4.86032 10.25 5.05109 10.25 5.25C10.25 5.44891 10.171 5.63968 10.0303 5.78033C9.88968 5.92098 9.69891 6 9.5 6ZM9.5 3.75H8C7.80109 3.75 7.61032 3.67098 7.46967 3.53033C7.32902 3.38968 7.25 3.19891 7.25 3C7.25 2.80109 7.32902 2.61032 7.46967 2.46967C7.61032 2.32902 7.80109 2.25 8 2.25H9.5C9.69891 2.25 9.88968 2.32902 10.0303 2.46967C10.171 2.61032 10.25 2.80109 10.25 3C10.25 3.19891 10.171 3.38968 10.0303 3.53033C9.88968 3.67098 9.69891 3.75 9.5 3.75Z" fill="currentColor"/>
@@ -172,7 +172,7 @@ const selectedLanguage = ref<'English' | 'Русский' | 'Română'>('English
             Attach file
           </Button>
 
-          <!-- Кнопка сохранения счета -->
+          <!-- Save invoice button -->
           <Button>
             Save invoice
             <svg class="w-4 h-4" viewBox="0 0 16 13" fill="none">

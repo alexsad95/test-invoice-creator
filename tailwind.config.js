@@ -58,7 +58,7 @@ export default {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'
         },
-        // Кастомные цвета
+        // Custom colors
         'custom-primary-100': '#1A56DB',
         'custom-primary-200': '#3F83F8',
         'custom-white-100': '#FFFFFF',
