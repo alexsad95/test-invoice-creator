@@ -127,12 +127,13 @@ export const useInvoiceStore = defineStore('invoice', () => {
     return invoices.value.find((invoice) => invoice.id === id);
   };
 
-  const calculateInvoiceTotal = (items: InvoiceItem[]): { subtotal: number; tax: number; total: number } => {
+  const calculateInvoiceTotal = (items: InvoiceItem[]) => {
     const subtotal = items.reduce((sum, item) => sum + item.amount, 0);
-    const tax = subtotal * 0.15; // 15% tax
-    const total = subtotal + tax;
-
-    return { subtotal, tax, total };
+    return {
+      subtotal,
+      tax: subtotal * 0.15,
+      total: subtotal + (subtotal * 0.15)
+    };
   };
 
   const generateId = (): string => {
