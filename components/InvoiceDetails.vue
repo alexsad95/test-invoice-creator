@@ -2,6 +2,7 @@
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
+import { DatePicker } from '~/components/ui/date-picker';
 import { useInvoiceStore } from '~/stores/invoiceStore';
 
 const invoiceStore = useInvoiceStore();
@@ -17,10 +18,10 @@ const invoiceStore = useInvoiceStore();
         <Label class="block text-sm font-medium mb-1">Invoice number</Label>
         <div class="relative">
           <Input
-            :model-value="invoiceStore.invoiceFormData.invoiceNumber"
-            @update:model-value="invoiceStore.updateInvoiceFormData({ invoiceNumber: String($event) })"
             type="text"
             placeholder="254267225"
+            :model-value="invoiceStore.invoiceFormData.invoiceNumber"
+            @update:model-value="invoiceStore.updateInvoiceFormData({ invoiceNumber: String($event) })"
           />
           <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -34,20 +35,20 @@ const invoiceStore = useInvoiceStore();
         <!-- Issue date -->
         <div class="w-full">
           <Label class="block text-sm font-medium mb-1">Issue date</Label>
-          <Input
+          <DatePicker
+            placeholder="Select issue date"
             :model-value="invoiceStore.invoiceFormData.issueDate"
             @update:model-value="invoiceStore.updateInvoiceFormData({ issueDate: String($event) })"
-            type="date"
           />
         </div>
         
         <!-- Due date -->
         <div class="w-full">
           <Label class="block text-sm font-medium mb-1">Due date</Label>
-          <Input
+          <DatePicker
+            placeholder="Select due date"
             :model-value="invoiceStore.invoiceFormData.dueDate"
             @update:model-value="invoiceStore.updateInvoiceFormData({ dueDate: String($event) })"
-            type="date"
           />
         </div>
       </div>
@@ -57,10 +58,10 @@ const invoiceStore = useInvoiceStore();
         <div class="w-full">
           <Label class="block text-sm font-medium mb-1">From</Label>
           <Input
-            :model-value="invoiceStore.invoiceFormData.from"
-            @update:model-value="invoiceStore.updateInvoiceFormData({ from: String($event) })"
             type="text"
             placeholder="Boris Expert"
+            :model-value="invoiceStore.invoiceFormData.from"
+            @update:model-value="invoiceStore.updateInvoiceFormData({ from: String($event) })"
           />
         </div>
         
