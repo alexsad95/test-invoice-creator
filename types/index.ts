@@ -1,15 +1,17 @@
 export type InvoiceStatus = 'draft' | 'sent' | 'paid' | 'overdue';
+export type VAT = '0%' | '5%' | '7%' | '10%' | '12%' | '15%' | '17%' | '20%';
+export type UoM = 'pcs' | 'hrs' | 'kg';
 
 export interface InvoiceItem {
-  id?: string;
+  id: string;
   name: string;
-  quantity: number;
-  uoM?: string;
-  pricePerUnit: number;
-  vat: string;
-  amount: number;
   description?: string;
+  quantity: number;
   discount?: number;
+  uoM?: UoM;
+  vat: VAT;
+  pricePerUnit: number;
+  amount: number;
 }
 
 export interface Invoice {
@@ -31,6 +33,7 @@ export interface Invoice {
 }
 
 export interface InvoiceFormData {
+  id: string;
   invoiceNumber: string;
   issueDate: string;
   dueDate: string;
