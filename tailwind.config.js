@@ -57,18 +57,7 @@ export default {
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'
-        },
-        // Custom colors
-        'custom-primary-100': '#1A56DB',
-        'custom-primary-200': '#3F83F8',
-        'custom-white-100': '#FFFFFF',
-        'custom-gray-100': '#F9FAFB',
-        'custom-gray-200': '#F3F4F6',
-        'custom-gray-300': '#E5E7EB',
-        'custom-gray-400': '#D1D5DB',
-        'custom-gray-500': '#6B7280',
-        'custom-gray-600': '#111928',
-        'custom-black-100': '#000000',
+        }
       },
       borderRadius: {
         lg: 'var(--radius)',
