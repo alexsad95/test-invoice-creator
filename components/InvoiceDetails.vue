@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
 import { DatePicker } from '~/components/ui/date-picker';
+import { Button } from '~/components/ui/button';
+import { X } from 'lucide-vue-next';
 import { useInvoiceStore } from '~/stores/invoiceStore';
 
 const invoiceStore = useInvoiceStore();
@@ -18,16 +19,21 @@ const invoiceStore = useInvoiceStore();
         <Label class="block text-sm font-medium mb-1">Invoice number</Label>
         <div class="relative">
           <Input
-            type="text"
+            type="number"
             placeholder="254267225"
+            class="pr-10 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
             :model-value="invoiceStore.invoiceFormData.invoiceNumber"
             @update:model-value="invoiceStore.updateInvoiceFormData({ invoiceNumber: String($event) })"
           />
-          <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
-          </button>
+          <Button 
+            v-if="invoiceStore.invoiceFormData.invoiceNumber"
+            @click="invoiceStore.updateInvoiceFormData({ invoiceNumber: '' })"
+            variant="secondary"
+            size="sm"
+            class="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+          >
+            <X class="h-4 w-4" />
+          </Button>
         </div>
       </div>
 
@@ -55,31 +61,44 @@ const invoiceStore = useInvoiceStore();
 
       <div class="flex flex-row gap-2 items-center justify-between">
         <!-- From -->
-        <div class="w-full">
+        <div class="w-full relative">
           <Label class="block text-sm font-medium mb-1">From</Label>
           <Input
             type="text"
             placeholder="Boris Expert"
+            class="pr-10"
             :model-value="invoiceStore.invoiceFormData.from"
             @update:model-value="invoiceStore.updateInvoiceFormData({ from: String($event) })"
           />
+          <Button 
+            v-if="invoiceStore.invoiceFormData.from"
+            @click="invoiceStore.updateInvoiceFormData({ from: '' })"
+            variant="secondary"
+            size="sm"
+            class="absolute right-1 top-1/2 h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+          >
+            <X class="h-4 w-4" />
+          </Button>
         </div>
         
         <!-- To -->
-        <div class="w-full">
+        <div class="w-full relative">
           <Label class="block text-sm font-medium mb-1">To</Label>
-          <Select 
+          <Input
+            type="text"
+            placeholder="General Construct"
             :model-value="invoiceStore.invoiceFormData.to"
             @update:model-value="invoiceStore.updateInvoiceFormData({ to: String($event) })"
+          />
+          <Button 
+            v-if="invoiceStore.invoiceFormData.to"
+            @click="invoiceStore.updateInvoiceFormData({ to: '' })"
+            variant="secondary"
+            size="sm"
+            class="absolute right-1 top-1/2 h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
           >
-            <SelectTrigger class="w-full bg-white text-black">
-              <SelectValue placeholder="Select company" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="General Construct">General Construct</SelectItem>
-              <SelectItem value="Another Company">Another Company</SelectItem>
-            </SelectContent>
-          </Select>
+            <X class="h-4 w-4" />
+          </Button>
         </div>
       </div>
     </div>

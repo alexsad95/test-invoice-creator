@@ -13,7 +13,7 @@ export const useInvoiceStore = defineStore('invoice', () => {
     issueDate: '2024-09-07',
     dueDate: '2024-09-07',
     from: '',
-    to: 'General Construct',
+    to: '',
     discount: 0,
     bankAccount: '',
     notes: '',

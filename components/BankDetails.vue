@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
-import { Textarea } from '~/components/ui/textarea';
 import { Button } from '~/components/ui/button';
 import { useInvoiceStore } from '~/stores/invoiceStore';
 import { formatNumber } from '~/utils/format';
+
 import maibImage from '/assets/images/maib.svg';
 
 const invoiceStore = useInvoiceStore();
@@ -18,9 +18,9 @@ const invoiceStore = useInvoiceStore();
     <div class="relative">
       <!-- Bank account -->
       <Input
-        type="text"
+        type="number"
         placeholder="41399128191019"
-        class="h-8 pr-16"
+        class="pr-10 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
         :model-value="invoiceStore.invoiceFormData.bankAccount"
         @update:model-value="invoiceStore.updateInvoiceFormData({ bankAccount: String($event) })"
       />
@@ -32,12 +32,12 @@ const invoiceStore = useInvoiceStore();
     <!-- Subtotal -->
     <div class="flex justify-between items-center">
       <span class="text-sm font-bold text-foreground">Subtotal</span>
-      <span class="text-sm font-bold text-foreground">Mdl {{ formatNumber(invoiceStore.subtotal) }}</span>
+      <span class="text-sm font-bold text-foreground">MDL {{ formatNumber(invoiceStore.subtotal) }}</span>
     </div>
     
     <div class="flex justify-between items-center">
       <span class="text-sm font-bold text-foreground">VAT</span>
-      <span class="text-sm font-bold text-foreground">Mdl {{ formatNumber(invoiceStore.vat) }}</span>
+      <span class="text-sm font-bold text-foreground">MDL {{ formatNumber(invoiceStore.vat) }}</span>
     </div>
     
     <!-- Discount -->
@@ -56,7 +56,7 @@ const invoiceStore = useInvoiceStore();
     <!-- Total -->
     <div class="flex justify-between items-center pt-2 border-t border-border">
       <span class="text-lg font-bold text-foreground">Total</span>
-      <span class="text-lg font-bold text-foreground">Mdl {{ formatNumber(invoiceStore.total) }}</span>
+      <span class="text-lg font-bold text-foreground">MDL {{ formatNumber(invoiceStore.total) }}</span>
     </div>
 
     <!-- Add advanced paid link -->
