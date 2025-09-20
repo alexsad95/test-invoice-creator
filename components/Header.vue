@@ -4,8 +4,8 @@ import { ref } from 'vue';
 import { Button } from '~/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '~/components/ui/select';
 
-const selectedCurrency = ref<"usd" | "eur" | "mdl">('usd');
-const selectedLanguage = ref<'en' | 'ru' | 'ro'>('en');
+const selectedCurrency = ref<"USD" | "EUR" | "MDL">('USD');
+const selectedLanguage = ref<'English' | 'Russian' | 'Română'>('English');
 </script>
 
 <template>
@@ -18,7 +18,7 @@ const selectedLanguage = ref<'en' | 'ru' | 'ro'>('en');
           <Select v-model="selectedCurrency">
             <SelectTrigger class="w-auto border-1 border-gray-300 bg-transparent shadow-none hover:bg-gray-50">
               <div class="flex items-center space-x-2">
-                <svg v-if="selectedCurrency === 'usd'" viewBox="0 0 640 480">
+                <svg v-if="selectedCurrency === 'USD'" viewBox="0 0 640 480">
                   <g fill-rule="evenodd">
                     <g stroke-width="1pt">
                       <path fill="#bd3d44" d="M0 0h972.8v39.4H0zm0 78.8h972.8v39.4H0zm0 78.7h972.8V197H0zm0 78.8h972.8v39.4H0zm0 78.8h972.8v39.4H0zm0 78.7h972.8v39.4H0zm0 78.8h972.8V512H0z" transform="scale(.9375)"/>
@@ -29,7 +29,7 @@ const selectedLanguage = ref<'en' | 'ru' | 'ro'>('en');
                   </g>
                 </svg>
 
-                <svg v-else-if="selectedCurrency === 'eur'" viewBox="0 0 640 480">
+                <svg v-else-if="selectedCurrency === 'EUR'" viewBox="0 0 640 480">
                   <defs>
                     <g id="d">
                       <g id="b">
@@ -58,7 +58,7 @@ const selectedLanguage = ref<'en' | 'ru' | 'ro'>('en');
                   </g>
                 </svg>
 
-                <svg v-else-if="selectedCurrency === 'mdl'" viewBox="0 0 640 480">
+                <svg v-else-if="selectedCurrency === 'MDL'" viewBox="0 0 640 480">
                   <g fill-rule="evenodd" stroke-width="1pt">
                     <path fill="#00319c" d="M0 0h213.3v480H0z"/>
                     <path fill="#ffde00" d="M213.3 0h213.4v480H213.3z"/>
@@ -133,9 +133,9 @@ const selectedLanguage = ref<'en' | 'ru' | 'ro'>('en');
               </div>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="usd">USD - US Dollar</SelectItem>
-              <SelectItem value="eur">EUR - Euro</SelectItem>
-              <SelectItem value="mdl">MDL - Moldovan Leu</SelectItem>
+              <SelectItem value="USD">USD - US Dollar</SelectItem>
+              <SelectItem value="EUR">EUR - Euro</SelectItem>
+              <SelectItem value="MDL">MDL - Moldovan Leu</SelectItem>
             </SelectContent>
           </Select>
 
@@ -145,9 +145,9 @@ const selectedLanguage = ref<'en' | 'ru' | 'ro'>('en');
               <span class="font-medium">{{ selectedLanguage }}</span>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="en">English</SelectItem>
-              <SelectItem value="ru">Русский</SelectItem>
-              <SelectItem value="ro">Română</SelectItem>
+              <SelectItem value="English">English</SelectItem>
+              <SelectItem value="Russian">Русский</SelectItem>
+              <SelectItem value="Română">Română</SelectItem>
             </SelectContent>
           </Select>
 
