@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Button } from '~/components/ui/button';
-import { Input } from '~/components/ui/input';
-import { Label } from '~/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
-import { Textarea } from '~/components/ui/textarea';
 import { useInvoiceStore } from '~/stores/invoiceStore';
+import type { UoM, VAT } from '~/types';
 
 const invoiceStore = useInvoiceStore();
 const isSelectorOpen = ref(false);
+
+const tableHeaderClass = 'text-left p-1 text-sm font-medium text-foreground';
 
 const addNewLine = () => {
   invoiceStore.addInvoiceItem();
@@ -38,14 +36,14 @@ const addDiscount = () => {
       <table class="w-full">
         <thead>
           <tr>
-            <th class="text-left p-1 text-sm font-medium text-foreground w-3"/>
-            <th class="text-left p-1 text-sm font-medium text-foreground w-60">Name</th>
-            <th class="text-left p-1 text-sm font-medium text-foreground w-20">Quantity</th>
-            <th class="text-left p-1 text-sm font-medium text-foreground w-20">UoM</th>
-            <th class="text-left p-1 text-sm font-medium text-foreground w-24">Price/Unit</th>
-            <th class="text-left p-1 text-sm font-medium text-foreground w-20">Vat</th>
-            <th class="text-left p-1 text-sm font-medium text-foreground w-24">Amount</th>
-            <th class="text-left p-1 text-sm font-medium text-foreground w-8"/>
+            <th :class="`${tableHeaderClass} w-3`"/>
+            <th :class="`${tableHeaderClass} w-60`">Name</th>
+            <th :class="`${tableHeaderClass} w-20`">Quantity</th>
+            <th :class="`${tableHeaderClass} w-20`">UoM</th>
+            <th :class="`${tableHeaderClass} w-24`">Price/Unit</th>
+            <th :class="`${tableHeaderClass} w-20`">VAT</th>
+            <th :class="`${tableHeaderClass} w-24`">Amount</th>
+            <th :class="`${tableHeaderClass} w-8`"/>
           </tr>
         </thead>
         <tbody>
@@ -55,31 +53,30 @@ const addDiscount = () => {
               <td class="text-sm text-muted-foreground font-raleway">{{ index + 1 }}</td>
               <td class="p-1">
                 <Input
+                  type="text"
+                  placeholder="Enter product name"
+                  class="h-8 text-sm"
                   :model-value="item.name"
                   @update:model-value="invoiceStore.updateInvoiceItem(index, { name: String($event) })"
-                  type="text"
-                  class="h-8 text-sm"
-                  placeholder="Enter product name"
                 />
               </td>
               <td class="p-1">
                 <Input
-                  :model-value="item.quantity"
-                  @update:model-value="invoiceStore.updateInvoiceItem(index, { quantity: Number($event) })"
                   type="number"
                   class="h-8 text-sm"
+                  :model-value="item.quantity"
+                  @update:model-value="invoiceStore.updateInvoiceItem(index, { quantity: Number($event) })"
                 />
               </td>
               <td class="p-1">
                 <Select 
                   :model-value="item.uoM"
-                  @update:model-value="invoiceStore.updateInvoiceItem(index, { uoM: $event ? String($event) : undefined })"
+                  @update:model-value="invoiceStore.updateInvoiceItem(index, { uoM: $event ? String($event) as UoM : undefined })"
                 >
                   <SelectTrigger class="h-8 w-20 text-sm bg-white text-black">
-                    <SelectValue placeholder="UoM" />
+                    <SelectValue placeholder="" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">-</SelectItem>
                     <SelectItem value="kg">kg</SelectItem>
                     <SelectItem value="pcs">pcs</SelectItem>
                     <SelectItem value="hrs">hrs</SelectItem>
@@ -88,33 +85,38 @@ const addDiscount = () => {
               </td>
               <td class="p-1">
                 <Input
-                  :model-value="item.pricePerUnit"
-                  @update:model-value="invoiceStore.updateInvoiceItem(index, { pricePerUnit: Number($event) })"
                   type="number"
                   class="h-8 text-sm"
+                  :model-value="item.pricePerUnit"
+                  @update:model-value="invoiceStore.updateInvoiceItem(index, { pricePerUnit: Number($event) })"
                 />
               </td>
               <td class="p-1">
                 <Select 
                   :model-value="item.vat"
-                  @update:model-value="invoiceStore.updateInvoiceItem(index, { vat: String($event) })"
+                  @update:model-value="invoiceStore.updateInvoiceItem(index, { vat: String($event) as VAT })"
                 >
                   <SelectTrigger class="h-8 w-20 text-sm bg-white text-black">
-                    <SelectValue placeholder="VAT" />
+                    <SelectValue placeholder="0%" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="0%">0%</SelectItem>
+                    <SelectItem value="5%">5%</SelectItem>
+                    <SelectItem value="7%">7%</SelectItem>
+                    <SelectItem value="10%">10%</SelectItem>
+                    <SelectItem value="12%">12%</SelectItem>
                     <SelectItem value="15%">15%</SelectItem>
+                    <SelectItem value="17%">17%</SelectItem>
                     <SelectItem value="20%">20%</SelectItem>
                   </SelectContent>
                 </Select>
               </td>
               <td class="p-1">
                 <Input
-                  :model-value="item.amount"
-                  @update:model-value="invoiceStore.updateInvoiceItem(index, { amount: Number($event) })"
                   type="number"
                   class="h-8 text-sm"
+                  :model-value="item.amount"
+                  @update:model-value="invoiceStore.updateInvoiceItem(index, { amount: Number($event) })"
                 />
               </td>
               <td class="p-1">
@@ -137,11 +139,11 @@ const addDiscount = () => {
               <td colspan="7" class="p-1">
                 <div class="flex gap-2">
                   <Textarea
-                    :model-value="item.description"
-                    @update:model-value="invoiceStore.updateInvoiceItem(index, { description: String($event) })"
-                    class="resize-none w-full"
                     rows="2"
                     placeholder="Add description"
+                    class="resize-none w-full"
+                    :model-value="item.description"
+                    @update:model-value="invoiceStore.updateInvoiceItem(index, { description: String($event) })"
                   />
                   <Button 
                     variant="secondary" 
@@ -167,11 +169,11 @@ const addDiscount = () => {
                     <div class="flex items-center gap-2">
                       <div class="flex">
                         <Input
+                          type="number"
+                          placeholder="0"
+                          class="h-8 w-20 rounded-r-none"
                           :model-value="item.discount"
                           @update:model-value="invoiceStore.updateInvoiceItem(index, { discount: Number($event) })"
-                          type="number"
-                          class="h-8 w-20 rounded-r-none"
-                          placeholder="0"
                         />
                         <span class="h-8 px-3 bg-white text-muted-foreground border border-l-0 border-input rounded-r-md text-sm flex items-center justify-center">%</span>
                       </div>
@@ -197,7 +199,11 @@ const addDiscount = () => {
 
     <!-- Add line button -->
     <div class="flex">
-      <Button variant="outline" class="px-4 py-2 rounded-l-md rounded-r-none border-r-0" @click="addNewLine">
+      <Button 
+        variant="outline" 
+        class="px-4 py-2 rounded-l-md rounded-r-none border-r-0" 
+        @click="addNewLine"
+      >
         Add line
       </Button>
       

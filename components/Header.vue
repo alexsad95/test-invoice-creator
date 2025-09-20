@@ -1,11 +1,16 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Button } from '~/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger } from '~/components/ui/select';
+import { useInvoiceStore } from '~/stores/invoiceStore';
+
+const invoiceStore = useInvoiceStore();
 
 const selectedCurrency = ref<"USD" | "EUR" | "MDL">('USD');
 const selectedLanguage = ref<'English' | 'Russian' | 'Română'>('English');
+
+const handleSaveInvoice = () => {
+  invoiceStore.isSheetOpen = true;
+};
 </script>
 
 <template>
@@ -173,7 +178,7 @@ const selectedLanguage = ref<'English' | 'Russian' | 'Română'>('English');
           </Button>
 
           <!-- Save invoice button -->
-          <Button>
+          <Button @click="handleSaveInvoice">
             Save invoice
             <svg class="w-4 h-4" viewBox="0 0 16 13" fill="none">
               <path d="M15.4184 6.94511C15.4996 6.73242 15.5208 6.49838 15.4794 6.27259C15.438 6.04681 15.3359 5.83943 15.1859 5.67669L10.8999 1.02193C10.8011 0.910784 10.6829 0.822132 10.5521 0.761144C10.4214 0.700156 10.2808 0.668055 10.1385 0.666712C9.99627 0.665369 9.85517 0.694812 9.72349 0.753324C9.59181 0.811835 9.47217 0.898243 9.37157 1.0075C9.27096 1.11677 9.1914 1.2467 9.13752 1.38971C9.08365 1.53272 9.05654 1.68596 9.05777 1.84047C9.05901 1.99498 9.08857 2.14768 9.14472 2.28966C9.20088 2.43163 9.28251 2.56004 9.38485 2.66739L11.8429 5.33689H1.5715C1.28732 5.33689 1.01478 5.4595 0.813834 5.67773C0.61289 5.89596 0.5 6.19195 0.5 6.50058C0.5 6.80921 0.61289 7.1052 0.813834 7.32344C1.01478 7.54167 1.28732 7.66427 1.5715 7.66427H11.8429L9.38592 10.3326C9.28358 10.44 9.20195 10.5684 9.14579 10.7103C9.08964 10.8523 9.06008 11.005 9.05884 11.1595C9.05761 11.314 9.08472 11.4673 9.13859 11.6103C9.19247 11.7533 9.27203 11.8832 9.37264 11.9925C9.47324 12.1018 9.59288 12.1882 9.72456 12.2467C9.85624 12.3052 9.99734 12.3346 10.1396 12.3333C10.2819 12.3319 10.4225 12.2998 10.5532 12.2389C10.6839 12.1779 10.8022 12.0892 10.901 11.9781L15.187 7.32331C15.2863 7.21497 15.3649 7.08646 15.4184 6.94511Z" fill="currentColor"/>

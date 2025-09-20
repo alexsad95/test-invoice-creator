@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import { Input } from '~/components/ui/input';
-import { Label } from '~/components/ui/label';
-import { DatePicker } from '~/components/ui/date-picker';
-import { Button } from '~/components/ui/button';
 import { X } from 'lucide-vue-next';
 import { useInvoiceStore } from '~/stores/invoiceStore';
 

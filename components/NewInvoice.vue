@@ -1,12 +1,3 @@
-<script setup lang="ts">
-import { Button } from '~/components/ui/button';
-
-import BankDetails from '~/components/BankDetails.vue';
-import InvoiceDetails from '~/components/InvoiceDetails.vue';
-import Notes from '~/components/Notes.vue';
-import ProductsAndServices from '~/components/ProductsAndServices.vue';
-</script>
-
 <template>
   <div class="flex-[50%] py-4 pl-4 space-y-6">
     <!-- Title with the button backward -->

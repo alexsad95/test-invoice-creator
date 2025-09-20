@@ -1,14 +1,17 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
+import { randomUUID } from '~/utils/helpers';
 import type { Invoice, InvoiceItem, InvoiceFormData } from '~/types';
 
 export const useInvoiceStore = defineStore('invoice', () => {
   const invoices = ref<Invoice[]>([]);
   const currentInvoice = ref<Invoice | null>(null);
   const isLoading = ref(false);
+  const isSheetOpen = ref(false);
 
   // Invoice creation form state
   const invoiceFormData = ref<InvoiceFormData>({
+    id: randomUUID(),
     invoiceNumber: '',
     issueDate: '2024-09-07',
     dueDate: '2024-09-07',
@@ -25,7 +28,7 @@ export const useInvoiceStore = defineStore('invoice', () => {
   });
 
   const vat = computed((): number => {
-    return subtotal.value * 0.15; // 15% VAT
+    return subtotal.value * 0.15;
   });
 
   const total = computed((): number => {
@@ -44,9 +47,9 @@ export const useInvoiceStore = defineStore('invoice', () => {
 
   const addInvoiceItem = (): void => {
     const newItem: InvoiceItem = {
+      id: randomUUID(),
       name: '',
       quantity: 0,
-      uoM: 'none',
       pricePerUnit: 0,
       vat: '0%',
       amount: 0,
@@ -87,6 +90,7 @@ export const useInvoiceStore = defineStore('invoice', () => {
 
   const resetInvoiceForm = (): void => {
     invoiceFormData.value = {
+      id: randomUUID(),
       invoiceNumber: '',
       issueDate: '2024-09-07',
       dueDate: '2024-09-07',
@@ -102,7 +106,7 @@ export const useInvoiceStore = defineStore('invoice', () => {
   const createInvoice = (invoiceData: Omit<Invoice, 'id'>): Invoice => {
     const newInvoice: Invoice = {
       ...invoiceData,
-      id: generateId(),
+      id: randomUUID(),
     };
 
     invoices.value.push(newInvoice);
@@ -136,8 +140,45 @@ export const useInvoiceStore = defineStore('invoice', () => {
     };
   };
 
-  const generateId = (): string => {
-    return Date.now().toString(36) + Math.random().toString(36).substring(2);
+  const saveInvoiceFromForm = (): Invoice | null => {
+    try {
+      if (!invoiceFormData.value.invoiceNumber || !invoiceFormData.value.from || !invoiceFormData.value.to) {
+        throw new Error('Please fill in all required fields');
+      }
+
+      if (!invoiceFormData.value.items.length) {
+        throw new Error('Please add at least one item');
+      }
+
+      const newInvoice: Invoice = {
+        id: invoiceFormData.value.id,
+        number: invoiceFormData.value.invoiceNumber,
+        date: invoiceFormData.value.issueDate,
+        dueDate: invoiceFormData.value.dueDate,
+        client: {
+          name: invoiceFormData.value.to,
+          email: '',
+          address: '',
+        },
+        items: invoiceFormData.value.items,
+        subtotal: subtotal.value,
+        tax: vat.value,
+        total: total.value,
+        status: 'draft',
+        notes: invoiceFormData.value.notes,
+      };
+
+      invoices.value.push(newInvoice);
+
+      resetInvoiceForm();
+
+      isSheetOpen.value = false;
+
+      return newInvoice;
+    } catch (error) {
+      console.error('Error saving invoice:', error);
+      return null;
+    }
   };
 
   return {
@@ -145,6 +186,7 @@ export const useInvoiceStore = defineStore('invoice', () => {
     invoices,
     currentInvoice,
     isLoading,
+    isSheetOpen,
     invoiceFormData,
     
     // Computed
@@ -171,5 +213,6 @@ export const useInvoiceStore = defineStore('invoice', () => {
     deleteInvoice,
     getInvoiceById,
     calculateInvoiceTotal,
+    saveInvoiceFromForm,
   };
 });
