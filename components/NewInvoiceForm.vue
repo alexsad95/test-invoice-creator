@@ -3,6 +3,7 @@ import { Button } from '~/components/ui/button';
 
 import BankDetails from '~/components/BankDetails.vue';
 import InvoiceDetails from '~/components/InvoiceDetails.vue';
+import Notes from '~/components/Notes.vue';
 import ProductsAndServices from '~/components/ProductsAndServices.vue';
 </script>
 
@@ -22,5 +23,6 @@ import ProductsAndServices from '~/components/ProductsAndServices.vue';
     <InvoiceDetails />
     <ProductsAndServices />
     <BankDetails />
+    <Notes />
   </div>
 </template>

@@ -168,18 +168,18 @@ const addDiscount = () => {
                       <div class="flex">
                         <Input
                           :model-value="item.discount"
-                           @update:model-value="invoiceStore.updateInvoiceItem(index, { discount: Number($event) })"
+                          @update:model-value="invoiceStore.updateInvoiceItem(index, { discount: Number($event) })"
                           type="number"
                           class="h-8 w-20 rounded-r-none"
                           placeholder="0"
                         />
-                        <span class="h-8 px-3 py-2 bg-white text-muted-foreground border border-l-0 border-input rounded-r-md text-sm">%</span>
+                        <span class="h-8 px-3 bg-white text-muted-foreground border border-l-0 border-input rounded-r-md text-sm flex items-center justify-center">%</span>
                       </div>
                       <Button 
                         variant="secondary" 
                         size="icon" 
                         class="h-8 border border-input"
-                         @click="invoiceStore.updateInvoiceItem(index, { discount: undefined })"
+                        @click="invoiceStore.updateInvoiceItem(index, { discount: undefined })"
                       >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
