@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { CalendarDays } from 'lucide-vue-next'
-import { parseDate, getLocalTimeZone, CalendarDate } from '@internationalized/date'
-import type { DateValue } from '@internationalized/date'
+import { parseDate, getLocalTimeZone } from '@internationalized/date'
+import type { DateValue , CalendarDate } from '@internationalized/date'
 
 import { Calendar } from '~/components/ui/calendar'
 import { Button } from '~/components/ui/button'
@@ -84,9 +84,9 @@ const handleDateSelect = (date: DateValue | undefined) => {
     <PopoverContent class="w-auto p-0 border border-gray-200" align="start">
       <Calendar
         :model-value="selectedDate as any"
-        @update:model-value="handleDateSelect"
         :disabled="disabled"
         initial-focus
+        @update:model-value="handleDateSelect"
       />
     </PopoverContent>
   </Popover>

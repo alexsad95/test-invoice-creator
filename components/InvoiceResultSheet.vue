@@ -1,23 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { toast } from 'vue-sonner';
 import { useInvoiceStore } from '~/stores/invoiceStore';
 
 const invoiceStore = useInvoiceStore();
-const showSuccessMessage = ref(false);
-const showErrorMessage = ref(false);
 
 const handleSave = () => {
   const savedInvoice = invoiceStore.saveInvoiceFromForm();
   if (savedInvoice) {
-    showSuccessMessage.value = true;
-    setTimeout(() => {
-      showSuccessMessage.value = false;
-    }, 3000);
+    toast.success('Invoice has been saved successfully');
   } else {
-    showErrorMessage.value = true;
-    setTimeout(() => {
-      showErrorMessage.value = false;
-    }, 3000);
+    toast.error('Failed to save invoice. Please check all required fields.');
   }
 };
 </script>
@@ -33,19 +25,6 @@ const handleSave = () => {
         </SheetDescription>
       </SheetHeader>
       
-      <!-- Success/Error Messages -->
-      <div v-if="showSuccessMessage" class="px-4 mb-4">
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-          ✅ Invoice saved successfully!
-        </div>
-      </div>
-      
-      <div v-if="showErrorMessage" class="px-4 mb-4">
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-          ❌ Failed to save invoice. Please check all required fields.
-        </div>
-      </div>
-
       <!-- Invoice form data information -->
       <div class="px-4 overflow-y-auto">
         <div class="mb-4">
@@ -72,7 +51,7 @@ const handleSave = () => {
       </div>
 
       <SheetFooter>
-        <Button @click="handleSave" type="button">
+        <Button type="button" @click="handleSave">
           Save invoice
         </Button>
         <SheetClose as-child>

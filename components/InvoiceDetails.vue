@@ -23,10 +23,10 @@ const invoiceStore = useInvoiceStore();
           />
           <Button 
             v-if="invoiceStore.invoiceFormData.invoiceNumber"
-            @click="invoiceStore.updateInvoiceFormData({ invoiceNumber: '' })"
             variant="secondary"
             size="sm"
             class="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+            @click="invoiceStore.updateInvoiceFormData({ invoiceNumber: '' })"
           >
             <X class="h-4 w-4" />
           </Button>
@@ -68,10 +68,10 @@ const invoiceStore = useInvoiceStore();
           />
           <Button 
             v-if="invoiceStore.invoiceFormData.from"
-            @click="invoiceStore.updateInvoiceFormData({ from: '' })"
             variant="secondary"
             size="sm"
             class="absolute right-1 top-1/2 h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+            @click="invoiceStore.updateInvoiceFormData({ from: '' })"
           >
             <X class="h-4 w-4" />
           </Button>
@@ -88,10 +88,10 @@ const invoiceStore = useInvoiceStore();
           />
           <Button 
             v-if="invoiceStore.invoiceFormData.to"
-            @click="invoiceStore.updateInvoiceFormData({ to: '' })"
             variant="secondary"
             size="sm"
             class="absolute right-1 top-1/2 h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+            @click="invoiceStore.updateInvoiceFormData({ to: '' })"
           >
             <X class="h-4 w-4" />
           </Button>

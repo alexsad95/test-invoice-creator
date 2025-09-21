@@ -10,9 +10,9 @@ const invoiceStore = useInvoiceStore();
     <Label for="message">Notes (optional)</Label>
     <Textarea
       :model-value="invoiceStore.invoiceFormData.notes"
-      @update:model-value="invoiceStore.updateInvoiceFormData({ notes: String($event) })"
       class="resize-none h-28"
       placeholder="Add Notes"
+      @update:model-value="invoiceStore.updateInvoiceFormData({ notes: String($event) })"
     />
     <p class="text-xs text-muted-foreground">
       The notes will be displayed on the invoice; you can see them on the preview on the right.
