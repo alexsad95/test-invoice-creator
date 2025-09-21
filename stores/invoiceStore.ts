@@ -9,12 +9,14 @@ export const useInvoiceStore = defineStore('invoice', () => {
   const isLoading = ref(false);
   const isSheetOpen = ref(false);
 
+  const todayDate = getTodayDate();
+
   // Invoice creation form state
   const invoiceFormData = ref<InvoiceFormData>({
     id: randomUUID(),
     invoiceNumber: '',
-    issueDate: '2024-09-07',
-    dueDate: '2024-09-07',
+    issueDate: todayDate,
+    dueDate: todayDate,
     from: '',
     to: '',
     discount: 0,
@@ -92,10 +94,10 @@ export const useInvoiceStore = defineStore('invoice', () => {
     invoiceFormData.value = {
       id: randomUUID(),
       invoiceNumber: '',
-      issueDate: '2024-09-07',
-      dueDate: '2024-09-07',
+      issueDate: todayDate,
+      dueDate: todayDate,
       from: '',
-      to: 'General Construct',
+      to: '',
       discount: 0,
       bankAccount: '',
       notes: '',
