@@ -2,8 +2,6 @@
 import { useInvoiceStore } from '~/stores/invoiceStore';
 import { formatNumber } from '~/utils/format';
 
-import maibImage from '/assets/images/maib.svg';
-
 const invoiceStore = useInvoiceStore();
 </script>
 
@@ -22,7 +20,7 @@ const invoiceStore = useInvoiceStore();
         @update:model-value="invoiceStore.updateInvoiceFormData({ bankAccount: String($event) })"
       />
       <span class="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 flex items-center">
-        <img :src="maibImage" alt="MAIB" class="h-4">
+        <img src="/assets/images/maib.svg" alt="MAIB" class="h-4">
       </span>
     </div>
 
