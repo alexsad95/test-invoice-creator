@@ -3,6 +3,8 @@ import { useInvoiceStore } from '~/stores/invoiceStore';
 import { formatNumber } from '~/utils/format';
 
 const invoiceStore = useInvoiceStore();
+
+const labelClass = "text-sm font-bold text-foreground";
 </script>
 
 <template>
@@ -24,15 +26,28 @@ const invoiceStore = useInvoiceStore();
       </span>
     </div>
 
-    <!-- Subtotal -->
-    <div class="flex justify-between items-center">
-      <span class="text-sm font-bold text-foreground">Subtotal</span>
-      <span class="text-sm font-bold text-foreground">MDL {{ formatNumber(invoiceStore.subtotal) }}</span>
+    <!-- Subtotal before discount -->
+    <div v-if="invoiceStore.invoiceFormData.discount > 0" class="flex justify-between items-center">
+      <span :class="labelClass">Subtotal (before discount)</span>
+      <span :class="labelClass">MDL {{ formatNumber(invoiceStore.subtotal + (invoiceStore.subtotal * invoiceStore.invoiceFormData.discount / 100)) }}</span>
     </div>
     
+    <!-- Discount amount -->
+    <div v-if="invoiceStore.invoiceFormData.discount > 0" class="flex justify-between items-center">
+      <span :class="labelClass">Discount ({{ invoiceStore.invoiceFormData.discount }}%)</span>
+      <span :class="labelClass">-MDL {{ formatNumber(invoiceStore.subtotal * invoiceStore.invoiceFormData.discount / 100) }}</span>
+    </div>
+    
+    <!-- Subtotal after discount -->
     <div class="flex justify-between items-center">
-      <span class="text-sm font-bold text-foreground">VAT</span>
-      <span class="text-sm font-bold text-foreground">MDL {{ formatNumber(invoiceStore.vat) }}</span>
+      <span :class="labelClass">Subtotal</span>
+      <span :class="labelClass">MDL {{ formatNumber(invoiceStore.subtotal) }}</span>
+    </div>
+    
+    <!-- VAT -->
+    <div class="flex justify-between items-center">
+      <span :class="labelClass">VAT</span>
+      <span :class="labelClass">MDL {{ formatNumber(invoiceStore.vat) }}</span>
     </div>
     
     <!-- Discount -->
@@ -43,6 +58,8 @@ const invoiceStore = useInvoiceStore();
           type="number"
           class="h-8 w-20 rounded-r-none"
           placeholder="0"
+          :model-value="invoiceStore.invoiceFormData.discount"
+          @update:model-value="invoiceStore.updateInvoiceFormData({ discount: Number($event) })"
         />
         <span class="h-8 px-3 bg-white text-muted-foreground border border-l-0 border-input rounded-r-md text-sm flex items-center justify-center">%</span>
       </div>

@@ -11,7 +11,7 @@ export interface InvoiceItem {
   uoM?: UoM;
   vat: VAT;
   pricePerUnit: number;
-  amount: number;
+  amount?: number;
 }
 
 export interface Invoice {

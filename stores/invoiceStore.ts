@@ -19,23 +19,60 @@ export const useInvoiceStore = defineStore('invoice', () => {
     dueDate: todayDate,
     from: '',
     to: '',
-    discount: 0,
     bankAccount: '',
+    discount: 10,
     notes: '',
-    items: [],
+    items: [
+      {
+        id: randomUUID(),
+        name: 'Services of Marketing',
+        quantity: 1,
+        pricePerUnit: 24000,
+        vat: '15%',
+        discount: 10,
+      },
+      {
+        id: randomUUID(),
+        name: 'Logo',
+        quantity: 1,
+        pricePerUnit: 24000,
+        vat: '20%',
+      },
+      {
+        id: randomUUID(),
+        name: 'Sirius Skells',
+        quantity: 1,
+        pricePerUnit: 24000,
+        vat: '15%',
+      },
+    ],
   });
 
+  const calculateAmountWithoutVat = (item: any) => {
+    const individualDiscount = (1 - (item?.discount ?? 0) / 100);
+    const generalDiscount = (1 - invoiceFormData.value.discount / 100);
+
+    return Math.round(item.quantity * item.pricePerUnit * individualDiscount * generalDiscount);
+  };
+
+  const calculateVatAmount = (item: any) => {
+    const individualDiscount = (1 - (item?.discount ?? 0) / 100);
+    const generalDiscount = (1 - invoiceFormData.value.discount / 100);
+    const vatRate = Number(item.vat.replace('%', '')) / 100;
+
+    return Math.round(item.quantity * item.pricePerUnit * individualDiscount * generalDiscount * vatRate);
+  };
+
   const subtotal = computed((): number => {
-    return invoiceFormData.value.items.reduce((sum, item) => sum + (item.amount || 0), 0);
+    return invoiceFormData.value.items.reduce((sum, item) => sum + calculateAmountWithoutVat(item), 0);
   });
 
   const vat = computed((): number => {
-    return subtotal.value * 0.15;
+    return invoiceFormData.value.items.reduce((sum, item) => sum + calculateVatAmount(item), 0);
   });
 
   const total = computed((): number => {
-    const discountAmount = subtotal.value * (invoiceFormData.value.discount / 100);
-    return subtotal.value + vat.value - discountAmount;
+    return subtotal.value + vat.value;
   });
 
   const totalInvoices = computed(() => invoices.value.length);
@@ -54,7 +91,6 @@ export const useInvoiceStore = defineStore('invoice', () => {
       quantity: 0,
       pricePerUnit: 0,
       vat: '0%',
-      amount: 0,
     };
 
     invoiceFormData.value.items.push(newItem);
@@ -134,7 +170,8 @@ export const useInvoiceStore = defineStore('invoice', () => {
   };
 
   const calculateInvoiceTotal = (items: InvoiceItem[]) => {
-    const subtotal = items.reduce((sum, item) => sum + item.amount, 0);
+    const subtotal = items.reduce((sum, item) => sum + (item.quantity * item.pricePerUnit), 0);
+
     return {
       subtotal,
       tax: subtotal * 0.15,

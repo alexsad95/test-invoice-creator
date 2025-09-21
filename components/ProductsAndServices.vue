@@ -1,12 +1,20 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useInvoiceStore } from '~/stores/invoiceStore';
-import type { UoM, VAT } from '~/types';
+import type { InvoiceItem, UoM, VAT } from '~/types';
 
 const invoiceStore = useInvoiceStore();
 const isSelectorOpen = ref(false);
 
 const tableHeaderClass = 'text-left p-1 text-sm font-medium text-foreground';
+
+const calculateAmount = (item: InvoiceItem) => {
+  const individualDiscount = (1 - (item?.discount ?? 0) / 100);
+  const generalDiscount = (1 - invoiceStore.invoiceFormData.discount / 100);
+  const vat = (1 + Number(item.vat.replace('%', '')) / 100);
+
+  return Math.round(item.quantity * item.pricePerUnit * individualDiscount * generalDiscount * vat);
+};
 
 const addNewLine = () => {
   invoiceStore.addInvoiceItem();
@@ -115,8 +123,8 @@ const addDiscount = () => {
                 <Input
                   type="number"
                   class="h-8 text-sm"
-                  :model-value="item.amount"
-                  @update:model-value="invoiceStore.updateInvoiceItem(index, { amount: Number($event) })"
+                  readonly
+                  :model-value="calculateAmount(item)"
                 />
               </td>
               <td class="p-1">
