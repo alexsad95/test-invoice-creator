@@ -19,17 +19,15 @@ export interface Invoice {
   number: string;
   date: string;
   dueDate: string;
-  client: {
-    name: string;
-    email: string;
-    address: string;
-  };
+  from: string;
+  to: string;
   items: InvoiceItem[];
   subtotal: number;
   tax: number;
   total: number;
   status: InvoiceStatus;
   notes?: string;
+  bankAccount?: string;
 }
 
 export interface InvoiceFormData {

@@ -9,9 +9,9 @@ const invoiceStore = useInvoiceStore();
   <div class="space-y-2">
     <Label for="message">Notes (optional)</Label>
     <Textarea
-      :model-value="invoiceStore.invoiceFormData.notes"
-      class="resize-none h-28"
       placeholder="Add Notes"
+      class="resize-none h-28"
+      :model-value="invoiceStore.invoiceFormData.notes"
       @update:model-value="invoiceStore.updateInvoiceFormData({ notes: String($event) })"
     />
     <p class="text-xs text-muted-foreground">

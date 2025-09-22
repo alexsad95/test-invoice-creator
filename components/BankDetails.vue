@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { toast } from 'vue-sonner';
 import { useInvoiceStore } from '~/stores/invoiceStore';
 import { formatNumber } from '~/utils/format';
 
@@ -73,7 +74,11 @@ const labelClass = "text-sm font-bold text-foreground";
 
     <!-- Add advanced paid link -->
     <div class="pt-2">
-      <Button variant="link" class="!p-0 text-custom-link-blue active:text-custom-link-blue/80">
+      <Button 
+        variant="link" 
+        class="!p-0 text-custom-link-blue active:text-custom-link-blue/80" 
+        @click="() => toast.info('Not implemented yet')"
+      >
         <svg width="14" height="13" viewBox="0 0 14 13" fill="none">
           <path d="M7 3.67133V9.32867M4.17133 6.5H9.82867M13 6.5C13 7.28793 12.8448 8.06815 12.5433 8.7961C12.2417 9.52405 11.7998 10.1855 11.2426 10.7426C10.6855 11.2998 10.0241 11.7417 9.2961 12.0433C8.56815 12.3448 7.78793 12.5 7 12.5C6.21207 12.5 5.43185 12.3448 4.7039 12.0433C3.97595 11.7417 3.31451 11.2998 2.75736 10.7426C2.20021 10.1855 1.75825 9.52405 1.45672 8.7961C1.15519 8.06815 1 7.28793 1 6.5C1 4.9087 1.63214 3.38258 2.75736 2.25736C3.88258 1.13214 5.4087 0.5 7 0.5C8.5913 0.5 10.1174 1.13214 11.2426 2.25736C12.3679 3.38258 13 4.9087 13 6.5Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>

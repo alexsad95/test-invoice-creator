@@ -1,11 +1,21 @@
 <script setup lang="ts">
-import Header from '~/components/Header.vue';
-import Content from '~/components/Content.vue';
+import { useInvoiceStore } from '~/stores/invoiceStore';
+
+const invoiceStore = useInvoiceStore();
+
+// Load invoices from localStorage when page mounts
+onMounted(async () => {
+  await invoiceStore.loadInvoicesFromStorage();
+});
+
+// Computed properties for better organization
+const invoices = computed(() => invoiceStore.invoices);
+const isLoading = computed(() => invoiceStore.isLoading);
 </script>
 
 <template>
-  <div class="min-h-screen bg-base-100 flex flex-col">
-    <Header />
-    <Content />
+  <div class="min-h-screen">
+    <InvoicesHeader />
+    <InvoicesContent :invoices="invoices" :is-loading="isLoading" />
   </div>
 </template>

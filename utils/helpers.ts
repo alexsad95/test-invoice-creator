@@ -1,12 +1,18 @@
-import type { ClassValue } from "clsx"
-import { clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import type { ClassValue } from "clsx";
+import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+/* 
+ * Merge class names
+ */
+export const cn = (...inputs: ClassValue[]): string => {
+  return twMerge(clsx(inputs));
 }
 
-export function randomUUID(): string {
+/* 
+ * Generate a random UUID
+ */
+export const randomUUID = (): string => {
   const rnds = new Array(16);
 
   for (let i = 0; i < 16; i++) {
@@ -28,7 +34,10 @@ export function randomUUID(): string {
   );
 }
 
-export function getTodayDate(): string {
+/* 
+ * Get today's date
+ */
+export const getTodayDate = (): string => {
   const today = new Date();
   const year = today.getFullYear();
   const month = String(today.getMonth() + 1).padStart(2, '0');
@@ -36,3 +45,12 @@ export function getTodayDate(): string {
   
   return `${year}-${month}-${day}`;
 }
+
+/* 
+ * Truncate text by character count
+ */
+export const truncateText =(text: string, maxLength: number = 50): string => {
+  if (!text) return '';
+  if (text.length <= maxLength) return text;
+  return text.substring(0, maxLength) + '...';
+};

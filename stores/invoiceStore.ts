@@ -1,12 +1,14 @@
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
-import { randomUUID } from '~/utils/helpers';
+import { ref, computed, watch } from 'vue';
+import { randomUUID, getTodayDate } from '~/utils/helpers';
+import { setLocalStorageItem, getLocalStorageItem, removeLocalStorageItem, STORAGE_KEYS } from '~/utils/localStorage';
 import type { Invoice, InvoiceItem, InvoiceFormData } from '~/types';
 
 export const useInvoiceStore = defineStore('invoice', () => {
+  // Load data from localStorage when initializing (only on client side)
   const invoices = ref<Invoice[]>([]);
-  const currentInvoice = ref<Invoice | null>(null);
-  const isLoading = ref(false);
+  const currentInvoice = ref<Invoice | null>(process.client ? getLocalStorageItem(STORAGE_KEYS.CURRENT_INVOICE, null) : null);
+  const isLoading = ref(true);
   const isSheetOpen = ref(false);
 
   const todayDate = getTodayDate();
@@ -190,34 +192,108 @@ export const useInvoiceStore = defineStore('invoice', () => {
       }
 
       const newInvoice: Invoice = {
-        id: invoiceFormData.value.id,
+        id: randomUUID(),
         number: invoiceFormData.value.invoiceNumber,
         date: invoiceFormData.value.issueDate,
         dueDate: invoiceFormData.value.dueDate,
-        client: {
-          name: invoiceFormData.value.to,
-          email: '',
-          address: '',
-        },
+        from: invoiceFormData.value.from,
+        to: invoiceFormData.value.to,
         items: invoiceFormData.value.items,
         subtotal: subtotal.value,
         tax: vat.value,
         total: total.value,
         status: 'draft',
         notes: invoiceFormData.value.notes,
+        bankAccount: invoiceFormData.value.bankAccount,
       };
 
+      // Always add new invoice (no duplicate check)
       invoices.value.push(newInvoice);
-
       resetInvoiceForm();
-
       isSheetOpen.value = false;
 
       return newInvoice;
     } catch (error) {
-      console.error('Error saving invoice:', error);
       return null;
     }
+  };
+
+  // Watchers for automatic saving to localStorage
+  watch(invoices, (newInvoices, oldInvoices) => {
+    // Only run on client side
+    if (!process.client) return;
+    // Only save if not empty array (prevent clearing on initialization)
+    if (newInvoices.length > 0) {
+      setLocalStorageItem(STORAGE_KEYS.INVOICES, newInvoices);
+    }
+  }, { deep: true });
+
+  watch(currentInvoice, (newCurrentInvoice) => {
+    // Only run on client side
+    if (!process.client) return;
+    
+    // Only save if not null (prevent clearing on initialization)
+    if (newCurrentInvoice !== null) {
+      setLocalStorageItem(STORAGE_KEYS.CURRENT_INVOICE, newCurrentInvoice);
+    }
+  }, { deep: true });
+
+  watch(invoiceFormData, (newFormData) => {
+    // Only run on client side
+    if (!process.client) return;
+    
+    // Always save form data as it's always initialized
+    setLocalStorageItem(STORAGE_KEYS.INVOICE_FORM_DATA, newFormData);
+  }, { deep: true });
+
+  // Functions for working with localStorage
+  const loadInvoicesFromStorage = async () => {
+    if (!process.client) {
+      isLoading.value = false;
+      return;
+    }
+    
+    const savedInvoices = getLocalStorageItem(STORAGE_KEYS.INVOICES, []);
+    
+    invoices.value = savedInvoices;
+    isLoading.value = false;
+  };
+
+  const loadInvoiceFormData = () => {
+    const savedFormData = getLocalStorageItem(STORAGE_KEYS.INVOICE_FORM_DATA, null);
+    if (savedFormData) {
+      invoiceFormData.value = savedFormData;
+    }
+  };
+
+  const clearInvoiceFormData = () => {
+    invoiceFormData.value = {
+      id: randomUUID(),
+      invoiceNumber: '',
+      issueDate: todayDate,
+      dueDate: todayDate,
+      from: '',
+      to: '',
+      discount: 0,
+      bankAccount: '',
+      notes: '',
+      items: [],
+    };
+    removeLocalStorageItem(STORAGE_KEYS.INVOICE_FORM_DATA);
+  };
+
+  const clearAllData = () => {
+    invoices.value = [];
+    currentInvoice.value = null;
+    clearInvoiceFormData();
+    // Explicitly clear localStorage
+    removeLocalStorageItem(STORAGE_KEYS.INVOICES);
+    removeLocalStorageItem(STORAGE_KEYS.CURRENT_INVOICE);
+    console.log('All data cleared from localStorage');
+  };
+
+  const forceSaveInvoices = () => {
+    setLocalStorageItem(STORAGE_KEYS.INVOICES, invoices.value);
   };
 
   return {
@@ -253,5 +329,12 @@ export const useInvoiceStore = defineStore('invoice', () => {
     getInvoiceById,
     calculateInvoiceTotal,
     saveInvoiceFromForm,
+    
+    // Methods for localStorage
+    loadInvoicesFromStorage,
+    loadInvoiceFormData,
+    clearInvoiceFormData,
+    clearAllData,
+    forceSaveInvoices,
   };
 });
