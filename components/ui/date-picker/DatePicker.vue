@@ -4,10 +4,6 @@ import { CalendarDays } from 'lucide-vue-next'
 import { parseDate, getLocalTimeZone } from '@internationalized/date'
 import type { DateValue , CalendarDate } from '@internationalized/date'
 
-import { Calendar } from '~/components/ui/calendar'
-import { Button } from '~/components/ui/button'
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover'
-
 interface Props {
   modelValue?: string
   placeholder?: string

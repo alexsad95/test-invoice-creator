@@ -13,9 +13,9 @@
       <h1 class="text-[36px] font-bold text-foreground">New Invoice</h1>
     </div>
 
-    <InvoiceDetails />
-    <ProductsAndServices />
-    <BankDetails />
-    <Notes />
+    <FormsDetails />
+    <FormsProductsAndServices />
+    <FormsBankDetails />
+    <FormsNotes />
   </div>
 </template>

@@ -18,7 +18,7 @@ const props = defineProps<Props>();
     </div>
 
     <ul class="divide-y divide-gray-200">
-      <InvoiceItem 
+      <InvoicesItem 
         v-for="invoice in invoices" 
         :key="invoice.id" 
         :invoice="invoice" 
