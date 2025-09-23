@@ -43,7 +43,7 @@ const showImage = computed(() => {
 </script>
 
 <template>
-  <div class="flex-[40%] py-4 pr-4 h-full flex flex-col">
+  <div class="flex-[40%] py-4 lg:pr-4 h-full flex flex-col">
     <!-- Loading state -->
     <div v-if="isLoading" class="flex-1 flex items-center justify-center bg-[#E6E7EB] rounded shadow-sm">
       <div class="text-center text-gray-500">
