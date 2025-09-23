@@ -68,7 +68,7 @@ const handleDateSelect = (date: DateValue | undefined) => {
       <Button
         variant="secondary"
         :class="[
-          '!p-3 w-full justify-start text-left font-normal border border-gray-200',
+          '!px-3 !py-5 text-sm w-full justify-start text-left font-normal border border-gray-200',
           !selectedDate && 'text-muted-foreground'
         ]"
         :disabled="disabled"
