@@ -39,8 +39,8 @@ const addDiscount = () => {
   <div class="space-y-4">
     <h2 class="text-lg font-bold text-foreground">Products and services</h2>
     
-    <!-- Table of products and services -->
-    <div v-if="invoiceStore.invoiceFormData.items.length > 0" class="overflow-x-auto -ml-4">
+    <!-- Desktop Table of products and services -->
+    <div v-if="invoiceStore.invoiceFormData.items.length > 0" class="overflow-x-auto -ml-4 hidden md:block">
       <table class="w-full">
         <thead>
           <tr>
@@ -71,6 +71,7 @@ const addDiscount = () => {
               <td class="p-1">
                 <Input
                   type="number"
+                  min="0"
                   class="h-8 text-sm"
                   :model-value="item.quantity"
                   @update:model-value="invoiceStore.updateInvoiceItem(index, { quantity: Number($event) })"
@@ -82,7 +83,7 @@ const addDiscount = () => {
                   @update:model-value="invoiceStore.updateInvoiceItem(index, { uoM: $event ? String($event) as UoM : undefined })"
                 >
                   <SelectTrigger class="h-8 w-20 text-sm bg-white text-black">
-                    <SelectValue placeholder="" />
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="kg">kg</SelectItem>
@@ -94,6 +95,7 @@ const addDiscount = () => {
               <td class="p-1">
                 <Input
                   type="number"
+                  min="0"
                   class="h-8 text-sm"
                   :model-value="item.pricePerUnit"
                   @update:model-value="invoiceStore.updateInvoiceItem(index, { pricePerUnit: Number($event) })"
@@ -131,7 +133,7 @@ const addDiscount = () => {
                 <Button 
                   variant="secondary" 
                   size="icon" 
-                  class="h-8 border border-input"
+                  class="h-10 w-10 border border-input text-foreground"
                   @click="deleteLine(index)"
                 >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -156,7 +158,7 @@ const addDiscount = () => {
                   <Button 
                     variant="secondary" 
                     size="icon" 
-                    class="h-8 border border-input"
+                    class="h-10 w-10 border border-input"
                     @click="invoiceStore.updateInvoiceItem(index, { description: undefined })"
                   >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -178,17 +180,18 @@ const addDiscount = () => {
                       <div class="flex">
                         <Input
                           type="number"
+                          min="0"
                           placeholder="0"
-                          class="h-8 w-20 rounded-r-none"
+                          class="w-20 rounded-r-none"
                           :model-value="item.discount"
                           @update:model-value="invoiceStore.updateInvoiceItem(index, { discount: Number($event) })"
                         />
-                        <span class="h-8 px-3 bg-white text-muted-foreground border border-l-0 border-input rounded-r-md text-sm flex items-center justify-center">%</span>
+                        <span class="h-[42px] px-3 bg-white text-muted-foreground border border-l-0 border-input rounded-r-md text-sm flex items-center justify-center">%</span>
                       </div>
                       <Button 
                         variant="secondary" 
                         size="icon" 
-                        class="h-8 border border-input"
+                        class="h-10 w-10 border border-input"
                         @click="invoiceStore.updateInvoiceItem(index, { discount: undefined })"
                       >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -205,11 +208,174 @@ const addDiscount = () => {
       </table>
     </div>
 
+    <!-- Mobile version - Block layout -->
+    <div v-if="invoiceStore.invoiceFormData.items.length > 0" class="md:hidden space-y-4">
+      <template v-for="(item, index) in invoiceStore.invoiceFormData.items" :key="index">
+        <!-- Main product block -->
+        <div class="py-4 space-y-4">
+          <!-- Name field with delete button -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <Label class="text-sm font-medium text-foreground">Name</Label>
+              <Button 
+                variant="secondary" 
+                size="icon" 
+                class="h-10 w-10 border border-input text-foreground"
+                @click="deleteLine(index)"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+              </Button>
+            </div>
+            <Input
+              type="text"
+              placeholder="Enter product name"
+              class="h-10 text-sm"
+              :model-value="item.name"
+              @update:model-value="invoiceStore.updateInvoiceItem(index, { name: String($event) })"
+            />
+          </div>
+
+          <!-- Quantity and UoM in one row -->
+          <div class="flex justify-between gap-2">
+            <div class="w-full space-y-2">
+              <Label class="text-sm font-medium text-foreground">Quantity</Label>
+              <Input
+                type="number"
+                min="0"
+                class="h-10 text-sm"
+                :model-value="item.quantity"
+                @update:model-value="invoiceStore.updateInvoiceItem(index, { quantity: Number($event) })"
+              />
+            </div>
+            <div class="w-full space-y-2">
+              <Label class="text-sm font-medium text-foreground">UoM</Label>
+              <Select 
+                :model-value="item.uoM"
+                @update:model-value="invoiceStore.updateInvoiceItem(index, { uoM: $event ? String($event) as UoM : undefined })"
+              >
+                <SelectTrigger class="h-10 w-full text-sm bg-white text-black">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="kg">kg</SelectItem>
+                  <SelectItem value="pcs">pcs</SelectItem>
+                  <SelectItem value="hrs">hrs</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <!-- Price/Unit, VAT, Amount in one row -->
+          <div class="flex justify-between gap-2">
+            <div class="w-full space-y-2">
+              <Label class="text-sm font-medium text-foreground">Price/Unit</Label>
+              <Input
+                type="number"
+                min="0"
+                class="h-10 text-sm"
+                :model-value="item.pricePerUnit"
+                @update:model-value="invoiceStore.updateInvoiceItem(index, { pricePerUnit: Number($event) })"
+              />
+            </div>
+            <div class="w-full space-y-2">
+              <Label class="text-sm font-medium text-foreground">VAT</Label>
+              <Select 
+                :model-value="item.vat"
+                @update:model-value="invoiceStore.updateInvoiceItem(index, { vat: String($event) as VAT })"
+              >
+                <SelectTrigger class="h-10 w-full text-sm bg-white text-black">
+                  <SelectValue placeholder="0%" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0%">0%</SelectItem>
+                  <SelectItem value="5%">5%</SelectItem>
+                  <SelectItem value="7%">7%</SelectItem>
+                  <SelectItem value="10%">10%</SelectItem>
+                  <SelectItem value="12%">12%</SelectItem>
+                  <SelectItem value="15%">15%</SelectItem>
+                  <SelectItem value="17%">17%</SelectItem>
+                  <SelectItem value="20%">20%</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div class="w-full space-y-2">
+              <Label class="text-sm font-medium text-foreground">Amount</Label>
+              <Input
+                type="number"
+                class="h-10 text-sm"
+                readonly
+                :model-value="calculateAmount(item)"
+              />
+            </div>
+          </div>
+
+          <!-- Description field (if exists) -->
+          <div v-if="item.description !== undefined" class="space-y-2">
+            <Label class="text-sm font-medium text-foreground">Description</Label>
+            <div class="flex justify-between gap-2">
+              <Textarea
+                rows="2"
+                placeholder="Add description"
+                class="resize-none"
+                :model-value="item.description"
+                @update:model-value="invoiceStore.updateInvoiceItem(index, { description: String($event) })"
+              />
+              <Button 
+                variant="secondary" 
+                size="icon" 
+                class="h-10 w-10 border border-input"
+                @click="invoiceStore.updateInvoiceItem(index, { description: undefined })"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </Button>
+            </div>
+          </div>
+
+          <!-- Discount field (if exists) -->
+          <div v-if="item.discount !== undefined" class="space-y-2">
+            <Label class="text-sm font-medium text-foreground">Discount</Label>
+            <div class="flex justify-between gap-2">
+              <div class="flex w-full">
+                <Input
+                  type="number"
+                  min="0"
+                  placeholder="0"
+                  class="rounded-r-none"
+                  :model-value="item.discount"
+                  @update:model-value="invoiceStore.updateInvoiceItem(index, { discount: Number($event) })"
+                />
+                <span class="h-[42px] px-3 bg-white text-muted-foreground border border-l-0 border-input rounded-r-md text-sm flex items-center justify-center">%</span>
+              </div>
+              <Button 
+                variant="secondary" 
+                size="icon" 
+                class="h-10 w-10 border border-input"
+                @click="invoiceStore.updateInvoiceItem(index, { discount: undefined })"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <span 
+          v-if="index !== invoiceStore.invoiceFormData.items.length - 1" 
+          class="block h-[2px] bg-border"
+        ></span>
+      </template>
+    </div>
+
     <!-- Add line button -->
     <div class="flex">
       <Button 
         variant="outline" 
-        class="px-4 py-2 rounded-l-md rounded-r-none border-r-0" 
+        class="px-4 py-5 rounded-l-md rounded-r-none border-r-0" 
         @click="addNewLine"
       >
         Add line

@@ -57,12 +57,13 @@ const labelClass = "text-sm font-bold text-foreground";
       <div class="flex items-center">
         <Input
           type="number"
+          min="0"
           class="h-8 w-20 rounded-r-none"
           placeholder="0"
           :model-value="invoiceStore.invoiceFormData.discount"
           @update:model-value="invoiceStore.updateInvoiceFormData({ discount: Number($event) })"
         />
-        <span class="h-8 px-3 bg-white text-muted-foreground border border-l-0 border-input rounded-r-md text-sm flex items-center justify-center">%</span>
+        <span class="h-[42px] px-3 bg-white text-muted-foreground border border-l-0 border-input rounded-r-md text-sm flex items-center justify-center">%</span>
       </div>
     </div>
     

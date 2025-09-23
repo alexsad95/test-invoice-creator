@@ -5,8 +5,5 @@ import 'vue-sonner/style.css';
 
 <template>
   <Toaster />
-
-  <div>
-    <NuxtPage />
-  </div>
+  <NuxtPage />
 </template>

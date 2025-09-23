@@ -55,7 +55,7 @@ const invoiceStore = useInvoiceStore();
         </div>
       </div>
 
-      <div class="flex flex-row gap-2 items-center justify-between">
+      <div class="flex sm:flex-row flex-col gap-2 items-center justify-between">
         <!-- From -->
         <div class="w-full relative">
           <Label class="block text-sm font-medium mb-1">From</Label>
