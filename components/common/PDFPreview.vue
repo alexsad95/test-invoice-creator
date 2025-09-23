@@ -1,10 +1,33 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
+import { useInvoiceStore } from '~/stores/invoiceStore';
 import pdfPreview from '~/assets/images/pdf-preview.png';
+
+const invoiceStore = useInvoiceStore();
 
 const imageError = ref(false);
 const isLoading = ref(true);
 const imageLoaded = ref(false);
+const renderKey = ref(0);
+
+// Watch for changes in invoiceFormData to trigger re-render
+watch(() => invoiceStore.invoiceFormData, () => {
+  renderKey.value++;
+}, { deep: true });
+
+// Format time for display
+const formatLastUpdateTime = (date: Date | null) => {
+  if (!date) return 'Never updated';
+  
+  const timeString = date.toLocaleTimeString('en-US', {
+    hour12: false,
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+  
+  return `Updated ${timeString}`;
+};
 
 const handleImageError = () => {
   imageError.value = true;
@@ -44,6 +67,13 @@ const showImage = computed(() => {
 
 <template>
   <div class="flex-[40%] py-4 lg:pr-4 h-full flex flex-col">
+    <!-- Last update time indicator -->
+    <div class="mb-2 text-right">
+      <p class="text-xs text-gray-500">
+        {{ formatLastUpdateTime(invoiceStore.lastPDFUpdateTime) }}
+      </p>
+    </div>
+    
     <!-- Loading state -->
     <div v-if="isLoading" class="flex-1 flex items-center justify-center bg-[#E6E7EB] rounded shadow-sm">
       <div class="text-center text-gray-500">
@@ -65,6 +95,7 @@ const showImage = computed(() => {
     <!-- Success state -->
     <img 
       v-else-if="showImage"
+      :key="renderKey"
       :src="pdfPreview || ''" 
       alt="PDF Document Preview"
       class="max-w-full max-h-full object-contain rounded shadow-sm"

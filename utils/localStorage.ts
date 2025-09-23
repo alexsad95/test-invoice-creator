@@ -1,5 +1,3 @@
-// Utility functions for working with Localstorage
-
 /**
  * Save data to localStorage with error handling
  */

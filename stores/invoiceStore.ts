@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, computed, watch } from 'vue';
 import { randomUUID, getTodayDate } from '~/utils/helpers';
 import { setLocalStorageItem, getLocalStorageItem, removeLocalStorageItem, STORAGE_KEYS } from '~/utils/localStorage';
+import { useInvoiceCalculations, useUIState } from '~/composables';
 import type { Invoice, InvoiceItem, InvoiceFormData } from '~/types';
 
 export const useInvoiceStore = defineStore('invoice', () => {
@@ -9,7 +10,7 @@ export const useInvoiceStore = defineStore('invoice', () => {
   const invoices = ref<Invoice[]>([]);
   const currentInvoice = ref<Invoice | null>(process.client ? getLocalStorageItem(STORAGE_KEYS.CURRENT_INVOICE, null) : null);
   const isLoading = ref(true);
-  const isSheetOpen = ref(false);
+  const lastPDFUpdateTime = ref<Date | null>(null);
 
   const todayDate = getTodayDate();
 
@@ -50,40 +51,24 @@ export const useInvoiceStore = defineStore('invoice', () => {
     ],
   });
 
-  const calculateAmountWithoutVat = (item: any) => {
-    const individualDiscount = (1 - (item?.discount ?? 0) / 100);
-    const generalDiscount = (1 - invoiceFormData.value.discount / 100);
+  // Use composables for calculations
+  const calculations = useInvoiceCalculations(invoiceFormData);
+  const uiState = useUIState();
 
-    return Math.round(item.quantity * item.pricePerUnit * individualDiscount * generalDiscount);
-  };
-
-  const calculateVatAmount = (item: any) => {
-    const individualDiscount = (1 - (item?.discount ?? 0) / 100);
-    const generalDiscount = (1 - invoiceFormData.value.discount / 100);
-    const vatRate = Number(item.vat.replace('%', '')) / 100;
-
-    return Math.round(item.quantity * item.pricePerUnit * individualDiscount * generalDiscount * vatRate);
-  };
-
-  const subtotal = computed((): number => {
-    return invoiceFormData.value.items.reduce((sum, item) => sum + calculateAmountWithoutVat(item), 0);
-  });
-
-  const vat = computed((): number => {
-    return invoiceFormData.value.items.reduce((sum, item) => sum + calculateVatAmount(item), 0);
-  });
-
-  const total = computed((): number => {
-    return subtotal.value + vat.value;
-  });
-
+  // Computed properties for invoices
   const totalInvoices = computed(() => invoices.value.length);
   const paidInvoices = computed(() => invoices.value.filter((invoice) => invoice.status === 'paid'));
   const overdueInvoices = computed(() => invoices.value.filter((invoice) => invoice.status === 'overdue'));
   const totalRevenue = computed(() => paidInvoices.value.reduce((sum, invoice) => sum + invoice.total, 0));
 
+  // Form management methods
   const updateInvoiceFormData = (updates: Partial<InvoiceFormData>): void => {
     invoiceFormData.value = { ...invoiceFormData.value, ...updates };
+    lastPDFUpdateTime.value = new Date();
+  };
+
+  const updatePDFPreviewTime = (): void => {
+    lastPDFUpdateTime.value = new Date();
   };
 
   const addInvoiceItem = (): void => {
@@ -96,15 +81,18 @@ export const useInvoiceStore = defineStore('invoice', () => {
     };
 
     invoiceFormData.value.items.push(newItem);
+    lastPDFUpdateTime.value = new Date();
   };
 
   const deleteInvoiceItem = (index: number): void => {
     invoiceFormData.value.items.splice(index, 1);
+    lastPDFUpdateTime.value = new Date();
   };
 
   const updateInvoiceItem = (index: number, updates: Partial<InvoiceItem>): void => {
     if (invoiceFormData.value.items[index]) {
       invoiceFormData.value.items[index] = { ...invoiceFormData.value.items[index], ...updates };
+      lastPDFUpdateTime.value = new Date();
     }
   };
 
@@ -114,6 +102,7 @@ export const useInvoiceStore = defineStore('invoice', () => {
       const lastItem = invoiceFormData.value.items[lastIndex];
       if (lastItem && !lastItem.description) {
         lastItem.description = '';
+        lastPDFUpdateTime.value = new Date();
       }
     }
   };
@@ -124,6 +113,7 @@ export const useInvoiceStore = defineStore('invoice', () => {
       const lastItem = invoiceFormData.value.items[lastIndex];
       if (lastItem && lastItem.discount === undefined) {
         lastItem.discount = 0;
+        lastPDFUpdateTime.value = new Date();
       }
     }
   };
@@ -141,8 +131,10 @@ export const useInvoiceStore = defineStore('invoice', () => {
       notes: '',
       items: [],
     };
+    lastPDFUpdateTime.value = new Date();
   };
 
+  // Invoice management methods
   const createInvoice = (invoiceData: Omit<Invoice, 'id'>): Invoice => {
     const newInvoice: Invoice = {
       ...invoiceData,
@@ -199,9 +191,9 @@ export const useInvoiceStore = defineStore('invoice', () => {
         from: invoiceFormData.value.from,
         to: invoiceFormData.value.to,
         items: invoiceFormData.value.items,
-        subtotal: subtotal.value,
-        tax: vat.value,
-        total: total.value,
+        subtotal: calculations.subtotal.value,
+        tax: calculations.vat.value,
+        total: calculations.total.value,
         status: 'draft',
         notes: invoiceFormData.value.notes,
         bankAccount: invoiceFormData.value.bankAccount,
@@ -210,7 +202,7 @@ export const useInvoiceStore = defineStore('invoice', () => {
       // Always add new invoice (no duplicate check)
       invoices.value.push(newInvoice);
       resetInvoiceForm();
-      isSheetOpen.value = false;
+      uiState.closeSheet();
 
       return newInvoice;
     } catch (error) {
@@ -218,35 +210,7 @@ export const useInvoiceStore = defineStore('invoice', () => {
     }
   };
 
-  // Watchers for automatic saving to localStorage
-  watch(invoices, (newInvoices, oldInvoices) => {
-    // Only run on client side
-    if (!process.client) return;
-    // Only save if not empty array (prevent clearing on initialization)
-    if (newInvoices.length > 0) {
-      setLocalStorageItem(STORAGE_KEYS.INVOICES, newInvoices);
-    }
-  }, { deep: true });
-
-  watch(currentInvoice, (newCurrentInvoice) => {
-    // Only run on client side
-    if (!process.client) return;
-    
-    // Only save if not null (prevent clearing on initialization)
-    if (newCurrentInvoice !== null) {
-      setLocalStorageItem(STORAGE_KEYS.CURRENT_INVOICE, newCurrentInvoice);
-    }
-  }, { deep: true });
-
-  watch(invoiceFormData, (newFormData) => {
-    // Only run on client side
-    if (!process.client) return;
-    
-    // Always save form data as it's always initialized
-    setLocalStorageItem(STORAGE_KEYS.INVOICE_FORM_DATA, newFormData);
-  }, { deep: true });
-
-  // Functions for working with localStorage
+  // localStorage methods
   const loadInvoicesFromStorage = async () => {
     if (!process.client) {
       isLoading.value = false;
@@ -279,6 +243,7 @@ export const useInvoiceStore = defineStore('invoice', () => {
       notes: '',
       items: [],
     };
+    lastPDFUpdateTime.value = new Date();
     removeLocalStorageItem(STORAGE_KEYS.INVOICE_FORM_DATA);
   };
 
@@ -296,18 +261,50 @@ export const useInvoiceStore = defineStore('invoice', () => {
     setLocalStorageItem(STORAGE_KEYS.INVOICES, invoices.value);
   };
 
+  // Watchers for automatic saving to localStorage
+  watch(invoices, (newInvoices, oldInvoices) => {
+    // Only run on client side
+    if (!process.client) return;
+    // Only save if not empty array (prevent clearing on initialization)
+    if (newInvoices.length > 0) {
+      setLocalStorageItem(STORAGE_KEYS.INVOICES, newInvoices);
+    }
+  }, { deep: true });
+
+  watch(currentInvoice, (newCurrentInvoice) => {
+    // Only run on client side
+    if (!process.client) return;
+    
+    // Only save if not null (prevent clearing on initialization)
+    if (newCurrentInvoice !== null) {
+      setLocalStorageItem(STORAGE_KEYS.CURRENT_INVOICE, newCurrentInvoice);
+    }
+  }, { deep: true });
+
+  watch(invoiceFormData, (newFormData) => {
+    // Only run on client side
+    if (!process.client) return;
+    
+    // Update PDF preview time when form data changes
+    lastPDFUpdateTime.value = new Date();
+    
+    // Always save form data as it's always initialized
+    setLocalStorageItem(STORAGE_KEYS.INVOICE_FORM_DATA, newFormData);
+  }, { deep: true });
+
   return {
     // State
     invoices,
     currentInvoice,
     isLoading,
-    isSheetOpen,
+    isSheetOpen: uiState.isSheetOpen,
     invoiceFormData,
+    lastPDFUpdateTime,
     
     // Computed
-    subtotal,
-    vat,
-    total,
+    subtotal: calculations.subtotal,
+    vat: calculations.vat,
+    total: calculations.total,
     totalInvoices,
     paidInvoices,
     overdueInvoices,
@@ -315,6 +312,7 @@ export const useInvoiceStore = defineStore('invoice', () => {
     
     // Methods for form handling
     updateInvoiceFormData,
+    updatePDFPreviewTime,
     addInvoiceItem,
     deleteInvoiceItem,
     updateInvoiceItem,
@@ -336,5 +334,10 @@ export const useInvoiceStore = defineStore('invoice', () => {
     clearInvoiceFormData,
     clearAllData,
     forceSaveInvoices,
+    
+    // UI methods
+    openSheet: uiState.openSheet,
+    closeSheet: uiState.closeSheet,
+    toggleSheet: uiState.toggleSheet,
   };
 });

@@ -9,6 +9,9 @@ export const formatCurrency = (amount: number, currency = 'RUB'): string => {
   }).format(amount);
 };
 
+/*
+ * Utility functions for formatting dates
+ */
 export const formatDate = (date: string | Date): string => {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   return new Intl.DateTimeFormat('ru-RU', {
@@ -18,6 +21,9 @@ export const formatDate = (date: string | Date): string => {
   }).format(dateObj);
 };
 
+/*
+ * Utility functions for formatting dates
+ */
 export const formatShortDate = (date: string | Date): string => {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   return new Intl.DateTimeFormat('ru-RU', {
@@ -27,10 +33,16 @@ export const formatShortDate = (date: string | Date): string => {
   }).format(dateObj);
 };
 
+/*
+ * Utility functions for formatting invoice numbers
+ */
 export const formatInvoiceNumber = (number: string | number): string => {
   return `INV-${String(number).padStart(6, '0')}`;
 };
 
+/*
+ * Utility functions for formatting numbers
+ */
 export const formatNumber = (num: number): string => {
   return new Intl.NumberFormat('en-US').format(num);
 };

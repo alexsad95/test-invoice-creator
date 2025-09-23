@@ -33,7 +33,7 @@ const invoiceStore = useInvoiceStore();
         </div>
       </div>
 
-      <div class="flex flex-row gap-2 items-center justify-between">
+      <div class="flex max-[360px]:flex-col flex-row gap-2 items-center justify-between">
         <!-- Issue date -->
         <div class="w-full">
           <Label class="block text-sm font-medium mb-1">Issue date</Label>

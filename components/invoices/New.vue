@@ -4,7 +4,7 @@ import { useInvoiceStore } from '~/stores/invoiceStore';
 const invoiceStore = useInvoiceStore();
 
 const handleSaveInvoice = () => {
-  invoiceStore.isSheetOpen = true;
+  invoiceStore.openSheet();
 };
 </script>
 

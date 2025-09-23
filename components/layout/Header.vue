@@ -19,7 +19,7 @@ const selectedCurrency = ref<"USD" | "EUR" | "MDL">('USD');
 const selectedLanguage = ref<'English' | 'Russian' | 'Română'>('English');
 
 const handleSaveInvoice = () => {
-  invoiceStore.isSheetOpen = true;
+  invoiceStore.openSheet();
 };
 </script>
 
