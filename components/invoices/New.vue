@@ -9,7 +9,7 @@ const handleSaveInvoice = () => {
 </script>
 
 <template>
-  <div class="flex-[50%] py-4 lg:pl-4 space-y-6">
+  <div class="flex-[50%] space-y-6">
     <!-- Title with the button backward -->
     <div class="flex items-center space-x-3 sm:justify-start justify-between">
       <NuxtLink to="/" class="sm:block hidden">

@@ -14,32 +14,31 @@ const invoiceStore = useInvoiceStore();
 // Computed properties for invoices page
 const invoices = computed(() => invoiceStore.invoices);
 const isLoading = computed(() => invoiceStore.isLoading);
+
+// Common styles for main blocks
+const mainStyles = 'container mx-auto w-full flex-1 flex gap-4 justify-center px-4 py-8';
 </script>
 
 <template>
-  <div class="min-h-screen">
+  <div class="min-h-screen bg-gray-100 flex flex-col">
     <!-- Header -->
     <LayoutHeader :page="page" />
 
     <!-- Content based on page -->
     <!-- Invoices page content -->
-    <main v-if="page === 'invoices'" class="min-h-[calc(100vh-120px)] max-w-7xl mx-auto bg-gray-100 px-4 sm:px-6 lg:px-8 py-8">
+    <main v-if="page === 'invoices'" :class="mainStyles">
       <InvoicesSkeleton v-if="isLoading" />
-      <div v-else-if="invoices.length === 0" class="bg-white shadow overflow-hidden sm:rounded-md">
+      <div v-else-if="invoices.length === 0" class="w-full bg-white shadow overflow-hidden sm:rounded-md">
         <InvoicesEmpty />
       </div>
       <InvoicesList v-else :invoices="invoices" />
     </main>
 
     <!-- Invoice creator page content -->
-    <main v-else-if="page === 'creator'" class="bg-gray-100 flex-1 flex items-center justify-center">
-      <div class="container mx-auto px-4">
-        <div class="flex flex-col lg:flex-row max-w-8xl mx-auto gap-4">
-          <InvoicesNew />
-          <CommonPDFPreview />
-          <InvoicesResultSheet />
-        </div>
-      </div>
+    <main v-else-if="page === 'creator'" :class="mainStyles + ' lg:flex-row flex-col'">
+      <InvoicesNew />
+      <CommonPDFPreview />
+      <InvoicesResultSheet />
     </main>
   </div>
 </template>

@@ -66,7 +66,7 @@ const showImage = computed(() => {
 </script>
 
 <template>
-  <div class="flex-[40%] py-4 lg:pr-4 h-full flex flex-col">
+  <div class="flex-[40%] h-full flex flex-col">
     <!-- Last update time indicator -->
     <div class="mb-2 text-right">
       <p class="text-xs text-gray-500">
