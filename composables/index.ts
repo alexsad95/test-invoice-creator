@@ -1,16 +1,18 @@
-// Composable functions for invoice management
-import { computed, ref } from 'vue';
+import { computed, ref, type Ref } from 'vue';
+import type { InvoiceFormData, InvoiceItem } from '~/types';
 
-// Calculation composables
-export const useInvoiceCalculations = (formData: any) => {
-  const calculateAmountWithoutVat = (item: any) => {
+/**
+ * Calculation composables
+ */
+export const useInvoiceCalculations = (formData: Ref<InvoiceFormData>) => {
+  const calculateAmountWithoutVat = (item: InvoiceItem) => {
     const individualDiscount = (1 - (item?.discount ?? 0) / 100);
     const generalDiscount = (1 - (formData.value?.discount ?? 0) / 100);
 
     return Math.round(item.quantity * item.pricePerUnit * individualDiscount * generalDiscount);
   };
 
-  const calculateVatAmount = (item: any) => {
+  const calculateVatAmount = (item: InvoiceItem) => {
     const individualDiscount = (1 - (item?.discount ?? 0) / 100);
     const generalDiscount = (1 - (formData.value?.discount ?? 0) / 100);
     const vatRate = Number(item.vat.replace('%', '')) / 100;
@@ -20,12 +22,12 @@ export const useInvoiceCalculations = (formData: any) => {
 
   const subtotal = computed((): number => {
     const items = formData.value?.items || [];
-    return items.reduce((sum: number, item: any) => sum + calculateAmountWithoutVat(item), 0);
+    return items.reduce((sum: number, item: InvoiceItem) => sum + calculateAmountWithoutVat(item), 0);
   });
 
   const vat = computed((): number => {
     const items = formData.value?.items || [];
-    return items.reduce((sum: number, item: any) => sum + calculateVatAmount(item), 0);
+    return items.reduce((sum: number, item: InvoiceItem) => sum + calculateVatAmount(item), 0);
   });
 
   const total = computed((): number => {
@@ -41,7 +43,9 @@ export const useInvoiceCalculations = (formData: any) => {
   };
 };
 
-// UI state composables
+/**
+ * UI state composables
+ */
 export const useUIState = () => {
   const isSheetOpen = ref(false);
 

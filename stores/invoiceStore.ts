@@ -8,7 +8,7 @@ import type { Invoice, InvoiceItem, InvoiceFormData } from '~/types';
 export const useInvoiceStore = defineStore('invoice', () => {
   // Load data from localStorage when initializing (only on client side)
   const invoices = ref<Invoice[]>([]);
-  const currentInvoice = ref<Invoice | null>(process.client ? getLocalStorageItem(STORAGE_KEYS.CURRENT_INVOICE, null) : null);
+  const currentInvoice = ref<Invoice | null>(import.meta.client ? getLocalStorageItem(STORAGE_KEYS.CURRENT_INVOICE, null) : null);
   const isLoading = ref(true);
   const lastPDFUpdateTime = ref<Date | null>(null);
 
@@ -169,7 +169,7 @@ export const useInvoiceStore = defineStore('invoice', () => {
     return {
       subtotal,
       tax: subtotal * 0.15,
-      total: subtotal + (subtotal * 0.15)
+      total: subtotal + (subtotal * 0.15),
     };
   };
 
@@ -212,13 +212,13 @@ export const useInvoiceStore = defineStore('invoice', () => {
 
   // localStorage methods
   const loadInvoicesFromStorage = async () => {
-    if (!process.client) {
+    if (!import.meta.client) {
       isLoading.value = false;
       return;
     }
-    
+
     const savedInvoices = getLocalStorageItem(STORAGE_KEYS.INVOICES, []);
-    
+
     invoices.value = savedInvoices;
     isLoading.value = false;
   };
@@ -262,9 +262,9 @@ export const useInvoiceStore = defineStore('invoice', () => {
   };
 
   // Watchers for automatic saving to localStorage
-  watch(invoices, (newInvoices, oldInvoices) => {
+  watch(invoices, (newInvoices) => {
     // Only run on client side
-    if (!process.client) return;
+    if (!import.meta.client) return;
     // Only save if not empty array (prevent clearing on initialization)
     if (newInvoices.length > 0) {
       setLocalStorageItem(STORAGE_KEYS.INVOICES, newInvoices);
@@ -273,8 +273,8 @@ export const useInvoiceStore = defineStore('invoice', () => {
 
   watch(currentInvoice, (newCurrentInvoice) => {
     // Only run on client side
-    if (!process.client) return;
-    
+    if (!import.meta.client) return;
+
     // Only save if not null (prevent clearing on initialization)
     if (newCurrentInvoice !== null) {
       setLocalStorageItem(STORAGE_KEYS.CURRENT_INVOICE, newCurrentInvoice);
@@ -283,11 +283,11 @@ export const useInvoiceStore = defineStore('invoice', () => {
 
   watch(invoiceFormData, (newFormData) => {
     // Only run on client side
-    if (!process.client) return;
-    
+    if (!import.meta.client) return;
+
     // Update PDF preview time when form data changes
     lastPDFUpdateTime.value = new Date();
-    
+
     // Always save form data as it's always initialized
     setLocalStorageItem(STORAGE_KEYS.INVOICE_FORM_DATA, newFormData);
   }, { deep: true });
@@ -300,7 +300,7 @@ export const useInvoiceStore = defineStore('invoice', () => {
     isSheetOpen: uiState.isSheetOpen,
     invoiceFormData,
     lastPDFUpdateTime,
-    
+
     // Computed
     subtotal: calculations.subtotal,
     vat: calculations.vat,
@@ -309,7 +309,7 @@ export const useInvoiceStore = defineStore('invoice', () => {
     paidInvoices,
     overdueInvoices,
     totalRevenue,
-    
+
     // Methods for form handling
     updateInvoiceFormData,
     updatePDFPreviewTime,
@@ -319,7 +319,7 @@ export const useInvoiceStore = defineStore('invoice', () => {
     addItemDescription,
     addItemDiscount,
     resetInvoiceForm,
-    
+
     // Methods for invoice handling
     createInvoice,
     updateInvoice,
@@ -327,14 +327,14 @@ export const useInvoiceStore = defineStore('invoice', () => {
     getInvoiceById,
     calculateInvoiceTotal,
     saveInvoiceFromForm,
-    
+
     // Methods for localStorage
     loadInvoicesFromStorage,
     loadInvoiceFormData,
     clearInvoiceFormData,
     clearAllData,
     forceSaveInvoices,
-    
+
     // UI methods
     openSheet: uiState.openSheet,
     closeSheet: uiState.closeSheet,

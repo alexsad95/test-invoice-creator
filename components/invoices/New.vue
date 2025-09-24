@@ -12,7 +12,7 @@ const handleSaveInvoice = () => {
   <div class="flex-[50%] py-4 lg:pl-4 space-y-6">
     <!-- Title with the button backward -->
     <div class="flex items-center space-x-3 sm:justify-start justify-between">
-      <NuxtLink to="/" class="sm:block hidden"> 
+      <NuxtLink to="/" class="sm:block hidden">
         <Button size="lg" class="bg-black hover:bg-black/90 text-primary-foreground w-10 h-10 rounded-full">
           <svg class="w-5 h-5" viewBox="0 0 20 16" fill="none">
             <path d="M1 8H19H1Z" fill="currentColor"/>
@@ -27,10 +27,10 @@ const handleSaveInvoice = () => {
     <FormsProductsAndServices />
     <FormsBankDetails />
     <FormsNotes />
-    <CommonSaveInvoiceButton 
-      class="sm:hidden flex w-full" 
-      :is-mobile="true" 
-      @click="handleSaveInvoice" 
+    <CommonSaveInvoiceButton
+      class="sm:hidden flex w-full"
+      :is-mobile="true"
+      @click="handleSaveInvoice"
     />
   </div>
 </template>

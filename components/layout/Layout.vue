@@ -5,8 +5,8 @@ interface Props {
   page?: 'invoices' | 'creator'
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  page: 'invoices'
+withDefaults(defineProps<Props>(), {
+  page: 'invoices',
 });
 
 const invoiceStore = useInvoiceStore();
@@ -20,7 +20,7 @@ const isLoading = computed(() => invoiceStore.isLoading);
   <div class="min-h-screen">
     <!-- Header -->
     <LayoutHeader :page="page" />
-    
+
     <!-- Content based on page -->
     <!-- Invoices page content -->
     <main v-if="page === 'invoices'" class="min-h-[calc(100vh-120px)] max-w-7xl mx-auto bg-gray-100 px-4 sm:px-6 lg:px-8 py-8">

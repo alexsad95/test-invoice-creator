@@ -4,7 +4,7 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-  modelValue: 'English'
+  modelValue: 'English',
 });
 
 const emit = defineEmits<{

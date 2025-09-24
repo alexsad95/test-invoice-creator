@@ -10,7 +10,7 @@ withDefaults(defineProps<Props>(), {
   variant: 'outline',
   size: 'default',
   class: '',
-  isMobileMenuOpen: false
+  isMobileMenuOpen: false,
 });
 
 const emit = defineEmits<{
@@ -23,9 +23,9 @@ const handleClick = () => {
 </script>
 
 <template>
-  <Button 
-    :variant="variant" 
-    :size="size" 
+  <Button
+    :variant="variant"
+    :size="size"
     :class="class"
     @click="handleClick"
   >

@@ -8,7 +8,7 @@ const invoiceStore = useInvoiceStore();
 <template>
   <div class="space-y-4">
     <h2 class="text-lg font-bold text-foreground">Invoice details</h2>
-    
+
     <div class="flex flex-col gap-4">
       <!-- Invoice number -->
       <div>
@@ -21,7 +21,7 @@ const invoiceStore = useInvoiceStore();
             :model-value="invoiceStore.invoiceFormData.invoiceNumber"
             @update:model-value="invoiceStore.updateInvoiceFormData({ invoiceNumber: String($event) })"
           />
-          <Button 
+          <Button
             v-if="invoiceStore.invoiceFormData.invoiceNumber"
             variant="secondary"
             size="sm"
@@ -43,7 +43,7 @@ const invoiceStore = useInvoiceStore();
             @update:model-value="invoiceStore.updateInvoiceFormData({ issueDate: String($event) })"
           />
         </div>
-        
+
         <!-- Due date -->
         <div class="w-full">
           <Label class="block text-sm font-medium mb-1">Due date</Label>
@@ -66,7 +66,7 @@ const invoiceStore = useInvoiceStore();
             :model-value="invoiceStore.invoiceFormData.from"
             @update:model-value="invoiceStore.updateInvoiceFormData({ from: String($event) })"
           />
-          <Button 
+          <Button
             v-if="invoiceStore.invoiceFormData.from"
             variant="secondary"
             size="sm"
@@ -76,7 +76,7 @@ const invoiceStore = useInvoiceStore();
             <X class="h-4 w-4" />
           </Button>
         </div>
-        
+
         <!-- To -->
         <div class="w-full relative">
           <Label class="block text-sm font-medium mb-1">To</Label>
@@ -86,7 +86,7 @@ const invoiceStore = useInvoiceStore();
             :model-value="invoiceStore.invoiceFormData.to"
             @update:model-value="invoiceStore.updateInvoiceFormData({ to: String($event) })"
           />
-          <Button 
+          <Button
             v-if="invoiceStore.invoiceFormData.to"
             variant="secondary"
             size="sm"

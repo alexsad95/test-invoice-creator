@@ -1,15 +1,15 @@
-import type { ClassValue } from "clsx";
-import { clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import type { ClassValue } from 'clsx';
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
-/* 
+/*
  * Merge class names
  */
 export const cn = (...inputs: ClassValue[]): string => {
   return twMerge(clsx(inputs));
-}
+};
 
-/* 
+/*
  * Generate a random UUID
  */
 export const randomUUID = (): string => {
@@ -22,19 +22,19 @@ export const randomUUID = (): string => {
   rnds[6] = (rnds[6] & 0x0f) | 0x40;
   rnds[8] = (rnds[8] & 0x3f) | 0x80;
 
-  const hex = rnds.map(b => b.toString(16).padStart(2, "0"));
+  const hex = rnds.map(b => b.toString(16).padStart(2, '0'));
 
   return (
-    hex.slice(0, 4).join("") +
-    hex.slice(4, 6).join("") + "-" +
-    hex.slice(6, 8).join("") + "-" +
-    hex.slice(8, 10).join("") + "-" +
-    hex.slice(10, 12).join("") + "-" +
-    hex.slice(12, 16).join("")
+    hex.slice(0, 4).join('') +
+    hex.slice(4, 6).join('') + '-' +
+    hex.slice(6, 8).join('') + '-' +
+    hex.slice(8, 10).join('') + '-' +
+    hex.slice(10, 12).join('') + '-' +
+    hex.slice(12, 16).join('')
   );
-}
+};
 
-/* 
+/*
  * Get today's date
  */
 export const getTodayDate = (): string => {
@@ -42,11 +42,11 @@ export const getTodayDate = (): string => {
   const year = today.getFullYear();
   const month = String(today.getMonth() + 1).padStart(2, '0');
   const day = String(today.getDate()).padStart(2, '0');
-  
-  return `${year}-${month}-${day}`;
-}
 
-/* 
+  return `${year}-${month}-${day}`;
+};
+
+/*
  * Truncate text by character count
  */
 export const truncateText =(text: string, maxLength: number = 50): string => {

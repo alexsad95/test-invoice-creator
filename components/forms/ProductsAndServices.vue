@@ -38,7 +38,7 @@ const addDiscount = () => {
 <template>
   <div class="space-y-4">
     <h2 class="text-lg font-bold text-foreground">Products and services</h2>
-    
+
     <!-- Desktop Table of products and services -->
     <div v-if="invoiceStore.invoiceFormData.items.length > 0" class="overflow-x-auto -ml-4 hidden md:block">
       <table class="w-full">
@@ -78,7 +78,7 @@ const addDiscount = () => {
                 />
               </td>
               <td class="p-1">
-                <Select 
+                <Select
                   :model-value="item.uoM"
                   @update:model-value="invoiceStore.updateInvoiceItem(index, { uoM: $event ? String($event) as UoM : undefined })"
                 >
@@ -102,7 +102,7 @@ const addDiscount = () => {
                 />
               </td>
               <td class="p-1">
-                <Select 
+                <Select
                   :model-value="item.vat"
                   @update:model-value="invoiceStore.updateInvoiceItem(index, { vat: String($event) as VAT })"
                 >
@@ -130,9 +130,9 @@ const addDiscount = () => {
                 />
               </td>
               <td class="p-1">
-                <Button 
-                  variant="secondary" 
-                  size="icon" 
+                <Button
+                  variant="secondary"
+                  size="icon"
                   class="h-10 w-10 border border-input text-foreground"
                   @click="deleteLine(index)"
                 >
@@ -155,9 +155,9 @@ const addDiscount = () => {
                     :model-value="item.description"
                     @update:model-value="invoiceStore.updateInvoiceItem(index, { description: String($event) })"
                   />
-                  <Button 
-                    variant="secondary" 
-                    size="icon" 
+                  <Button
+                    variant="secondary"
+                    size="icon"
                     class="h-10 w-10 border border-input"
                     @click="invoiceStore.updateInvoiceItem(index, { description: undefined })"
                   >
@@ -188,9 +188,9 @@ const addDiscount = () => {
                         />
                         <span class="h-[42px] px-3 bg-white text-muted-foreground border border-l-0 border-input rounded-r-md text-sm flex items-center justify-center">%</span>
                       </div>
-                      <Button 
-                        variant="secondary" 
-                        size="icon" 
+                      <Button
+                        variant="secondary"
+                        size="icon"
                         class="h-10 w-10 border border-input"
                         @click="invoiceStore.updateInvoiceItem(index, { discount: undefined })"
                       >
@@ -217,9 +217,9 @@ const addDiscount = () => {
           <div class="space-y-2">
             <div class="flex items-center justify-between">
               <Label class="text-sm font-medium text-foreground">Name</Label>
-              <Button 
-                variant="secondary" 
-                size="icon" 
+              <Button
+                variant="secondary"
+                size="icon"
                 class="h-10 w-10 border border-input text-foreground"
                 @click="deleteLine(index)"
               >
@@ -251,7 +251,7 @@ const addDiscount = () => {
             </div>
             <div class="w-full space-y-2">
               <Label class="text-sm font-medium text-foreground">UoM</Label>
-              <Select 
+              <Select
                 :model-value="item.uoM"
                 @update:model-value="invoiceStore.updateInvoiceItem(index, { uoM: $event ? String($event) as UoM : undefined })"
               >
@@ -281,7 +281,7 @@ const addDiscount = () => {
             </div>
             <div class="w-full space-y-2">
               <Label class="text-sm font-medium text-foreground">VAT</Label>
-              <Select 
+              <Select
                 :model-value="item.vat"
                 @update:model-value="invoiceStore.updateInvoiceItem(index, { vat: String($event) as VAT })"
               >
@@ -322,9 +322,9 @@ const addDiscount = () => {
                 :model-value="item.description"
                 @update:model-value="invoiceStore.updateInvoiceItem(index, { description: String($event) })"
               />
-              <Button 
-                variant="secondary" 
-                size="icon" 
+              <Button
+                variant="secondary"
+                size="icon"
                 class="h-10 w-10 border border-input"
                 @click="invoiceStore.updateInvoiceItem(index, { description: undefined })"
               >
@@ -350,9 +350,9 @@ const addDiscount = () => {
                 />
                 <span class="h-[42px] px-3 bg-white text-muted-foreground border border-l-0 border-input rounded-r-md text-sm flex items-center justify-center">%</span>
               </div>
-              <Button 
-                variant="secondary" 
-                size="icon" 
+              <Button
+                variant="secondary"
+                size="icon"
                 class="h-10 w-10 border border-input"
                 @click="invoiceStore.updateInvoiceItem(index, { discount: undefined })"
               >
@@ -364,27 +364,27 @@ const addDiscount = () => {
           </div>
         </div>
 
-        <span 
-          v-if="index !== invoiceStore.invoiceFormData.items.length - 1" 
+        <span
+          v-if="index !== invoiceStore.invoiceFormData.items.length - 1"
           class="block h-[2px] bg-border"
-        ></span>
+        />
       </template>
     </div>
 
     <!-- Add line button -->
     <div class="flex">
-      <Button 
-        variant="outline" 
-        class="px-4 py-5 rounded-l-md rounded-r-none border-r-0" 
+      <Button
+        variant="outline"
+        class="px-4 py-5 rounded-l-md rounded-r-none border-r-0"
         @click="addNewLine"
       >
         Add line
       </Button>
-      
+
       <div class="relative">
         <Select :open="isSelectorOpen" @update:open="isSelectorOpen = $event">
-          <SelectTrigger 
-            data-button-style="true" 
+          <SelectTrigger
+            data-button-style="true"
             class="px-2 hover:bg-accent rounded-r-md rounded-l-none [&_svg:last-child]:hidden disabled:cursor-not-allowed"
             style="border-color: var(--accent-foreground) !important; color: var(--accent-foreground) !important;"
             :disabled="invoiceStore.invoiceFormData.items.length === 0"
@@ -395,13 +395,13 @@ const addDiscount = () => {
           </SelectTrigger>
           <SelectContent>
             <div class="flex flex-col">
-              <button 
+              <button
                 class="w-auto text-left p-2 text-sm hover:bg-accent rounded-md transition-colors cursor-pointer"
                 @click="addDescription"
               >
                 Add description
               </button>
-              <button 
+              <button
                 class="w-auto text-left p-2 text-sm hover:bg-accent rounded-md transition-colors cursor-pointer"
                 @click="addDiscount"
               >

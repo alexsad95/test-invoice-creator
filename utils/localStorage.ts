@@ -7,7 +7,7 @@ export function setLocalStorageItem(key: string, value: any): boolean {
     if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
       return false;
     }
-    
+
     const serializedValue = JSON.stringify(value);
     localStorage.setItem(key, serializedValue);
     return true;
@@ -26,7 +26,7 @@ export function getLocalStorageItem<T>(key: string, defaultValue: T): T {
     if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
       return defaultValue;
     }
-    
+
     const item = localStorage.getItem(key);
     if (item === null) {
       return defaultValue;
@@ -47,7 +47,7 @@ export function removeLocalStorageItem(key: string): boolean {
     if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
       return false;
     }
-    
+
     localStorage.removeItem(key);
     return true;
   } catch (error) {
@@ -60,5 +60,5 @@ export function removeLocalStorageItem(key: string): boolean {
 export const STORAGE_KEYS = {
   INVOICES: 'invoices',
   CURRENT_INVOICE: 'current_invoice',
-  INVOICE_FORM_DATA: 'invoice_form_data'
+  INVOICE_FORM_DATA: 'invoice_form_data',
 } as const;

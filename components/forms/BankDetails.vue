@@ -5,13 +5,13 @@ import { formatNumber } from '~/utils/format';
 
 const invoiceStore = useInvoiceStore();
 
-const labelClass = "text-sm font-bold text-foreground";
+const labelClass = 'text-sm font-bold text-foreground';
 </script>
 
 <template>
   <div class="space-y-4 w-full md:w-1/2">
     <h2 class="text-lg font-bold text-foreground">Bank details</h2>
-    
+
     <!-- Financial Summary -->
     <div class="relative">
       <!-- Bank account -->
@@ -32,25 +32,25 @@ const labelClass = "text-sm font-bold text-foreground";
       <span :class="labelClass">Subtotal (before discount)</span>
       <span :class="labelClass">MDL {{ formatNumber(invoiceStore.subtotal + (invoiceStore.subtotal * invoiceStore.invoiceFormData.discount / 100)) }}</span>
     </div>
-    
+
     <!-- Discount amount -->
     <div v-if="invoiceStore.invoiceFormData.discount > 0" class="flex justify-between items-center">
       <span :class="labelClass">Discount ({{ invoiceStore.invoiceFormData.discount }}%)</span>
       <span :class="labelClass">-MDL {{ formatNumber(invoiceStore.subtotal * invoiceStore.invoiceFormData.discount / 100) }}</span>
     </div>
-    
+
     <!-- Subtotal after discount -->
     <div class="flex justify-between items-center">
       <span :class="labelClass">Subtotal</span>
       <span :class="labelClass">MDL {{ formatNumber(invoiceStore.subtotal) }}</span>
     </div>
-    
+
     <!-- VAT -->
     <div class="flex justify-between items-center">
       <span :class="labelClass">VAT</span>
       <span :class="labelClass">MDL {{ formatNumber(invoiceStore.vat) }}</span>
     </div>
-    
+
     <!-- Discount -->
     <div class="flex flex-col">
       <Label class="block text-sm font-medium mb-1">Discount</Label>
@@ -66,7 +66,7 @@ const labelClass = "text-sm font-bold text-foreground";
         <span class="h-[42px] px-3 bg-white text-muted-foreground border border-l-0 border-input rounded-r-md text-sm flex items-center justify-center">%</span>
       </div>
     </div>
-    
+
     <!-- Total -->
     <div class="flex justify-between items-center pt-2 border-t border-border">
       <span class="text-lg font-bold text-foreground">Total</span>
@@ -75,9 +75,9 @@ const labelClass = "text-sm font-bold text-foreground";
 
     <!-- Add advanced paid link -->
     <div class="pt-2">
-      <Button 
-        variant="link" 
-        class="!p-0 text-custom-link-blue active:text-custom-link-blue/80" 
+      <Button
+        variant="link"
+        class="!p-0 text-custom-link-blue active:text-custom-link-blue/80"
         @click="() => toast.info('Not implemented yet')"
       >
         <svg width="14" height="13" viewBox="0 0 14 13" fill="none">

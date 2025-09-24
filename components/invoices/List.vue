@@ -5,7 +5,7 @@ interface Props {
   invoices: Invoice[];
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 </script>
 
 <template>
@@ -18,10 +18,10 @@ const props = defineProps<Props>();
     </div>
 
     <ul class="divide-y divide-gray-200">
-      <InvoicesItem 
-        v-for="invoice in invoices" 
-        :key="invoice.id" 
-        :invoice="invoice" 
+      <InvoicesItem
+        v-for="invoice in invoices"
+        :key="invoice.id"
+        :invoice="invoice"
       />
     </ul>
   </div>

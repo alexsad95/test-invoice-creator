@@ -1,24 +1,24 @@
 <script setup lang="ts">
 interface Props {
-  modelValue?: "USD" | "EUR" | "MDL";
+  modelValue?: 'USD' | 'EUR' | 'MDL';
 }
 
 withDefaults(defineProps<Props>(), {
-  modelValue: 'USD'
+  modelValue: 'USD',
 });
 
 const emit = defineEmits<{
-  'update:modelValue': [value: "USD" | "EUR" | "MDL"];
+  'update:modelValue': [value: 'USD' | 'EUR' | 'MDL'];
 }>();
 
-const handleCurrencyChange = (value: "USD" | "EUR" | "MDL") => {
+const handleCurrencyChange = (value: 'USD' | 'EUR' | 'MDL') => {
   emit('update:modelValue', value);
 };
 </script>
 
 <template>
-  <Select 
-    :model-value="modelValue" 
+  <Select
+    :model-value="modelValue"
     @update:model-value="(value) => value && handleCurrencyChange(value as 'USD' | 'EUR' | 'MDL')"
   >
     <SelectTrigger class="w-auto border-1 border-gray-300 bg-transparent shadow-none hover:bg-gray-50">

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useInvoiceStore } from '~/stores/invoiceStore';  
+import { useInvoiceStore } from '~/stores/invoiceStore';
 
 const invoiceStore = useInvoiceStore();
 </script>

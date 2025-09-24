@@ -5,11 +5,11 @@
 </template>
 
 <script setup lang="ts">
-import { cn } from '~/utils/helpers'
+import { cn } from '~/utils/helpers';
 
 interface SkeletonProps {
   className?: string
 }
 
-defineProps<SkeletonProps>()
+defineProps<SkeletonProps>();
 </script>

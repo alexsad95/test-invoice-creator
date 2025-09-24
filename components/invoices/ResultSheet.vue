@@ -24,28 +24,28 @@ const handleSave = () => {
           Current invoice information from the form
         </SheetDescription>
       </SheetHeader>
-      
+
       <!-- Invoice form data information -->
       <div class="px-4 overflow-y-auto">
         <div class="mb-4">
           <span class="block font-medium text-sm text-gray-500 pb-4 ">Invoice form data information</span>
-          <Textarea 
-            class="block p-4 bg-gray-100 font-mono rounded-md text-sm overflow-auto h-40" 
-            :model-value="JSON.stringify(invoiceStore.invoiceFormData, null, 2)" 
+          <Textarea
+            class="block p-4 bg-gray-100 font-mono rounded-md text-sm overflow-auto h-40"
+            :model-value="JSON.stringify(invoiceStore.invoiceFormData, null, 2)"
           />
         </div>
 
         <!-- Calculations -->
         <div class="mb-4">
           <span class="block font-medium text-sm text-gray-500 pb-4 ">Calculations</span>
-          <Textarea 
-            class="block p-4 bg-gray-100 font-mono rounded-md text-sm overflow-auto h-fit" 
+          <Textarea
+            class="block p-4 bg-gray-100 font-mono rounded-md text-sm overflow-auto h-fit"
             :model-value="JSON.stringify({
               subtotal: invoiceStore.subtotal,
               vat: invoiceStore.vat,
               total: invoiceStore.total,
               discount: invoiceStore.invoiceFormData.discount + '%'
-            }, null, 2)" 
+            }, null, 2)"
           />
         </div>
       </div>

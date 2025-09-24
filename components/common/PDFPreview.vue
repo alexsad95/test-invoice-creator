@@ -18,14 +18,14 @@ watch(() => invoiceStore.invoiceFormData, () => {
 // Format time for display
 const formatLastUpdateTime = (date: Date | null) => {
   if (!date) return 'Never updated';
-  
+
   const timeString = date.toLocaleTimeString('en-US', {
     hour12: false,
     hour: '2-digit',
     minute: '2-digit',
-    second: '2-digit'
+    second: '2-digit',
   });
-  
+
   return `Updated ${timeString}`;
 };
 
@@ -43,19 +43,19 @@ const handleImageLoad = () => {
 
 onMounted(() => {
   const img = new Image();
-  
+
   img.onload = () => {
     imageLoaded.value = true;
     isLoading.value = false;
     imageError.value = false;
   };
-  
+
   img.onerror = () => {
     imageError.value = true;
     isLoading.value = false;
     imageLoaded.value = false;
   };
-  
+
   img.src = pdfPreview;
 });
 
@@ -73,14 +73,14 @@ const showImage = computed(() => {
         {{ formatLastUpdateTime(invoiceStore.lastPDFUpdateTime) }}
       </p>
     </div>
-    
+
     <!-- Loading state -->
     <div v-if="isLoading" class="flex-1 flex items-center justify-center bg-[#E6E7EB] rounded shadow-sm">
       <div class="text-center text-gray-500">
         <p class="p-10 text-sm font-medium">Loading preview...</p>
       </div>
     </div>
-    
+
     <!-- Error state -->
     <div v-else-if="imageError" class="flex-1 flex items-center justify-center bg-[#E6E7EB] rounded shadow-sm">
       <div class="text-center text-gray-500">
@@ -91,12 +91,12 @@ const showImage = computed(() => {
         <p class="text-xs text-gray-400 mt-1">Image not available</p>
       </div>
     </div>
-    
+
     <!-- Success state -->
-    <img 
+    <img
       v-else-if="showImage"
       :key="renderKey"
-      :src="pdfPreview || ''" 
+      :src="pdfPreview || ''"
       alt="PDF Document Preview"
       class="max-w-full max-h-full object-contain rounded shadow-sm"
       @error="handleImageError"
