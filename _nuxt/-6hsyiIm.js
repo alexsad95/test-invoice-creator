@@ -1,0 +1,1 @@
+import{u as n,_ as t}from"./8OJs_WTS.js";import{g as a,j as c,k as r,o as s}from"#entry";import"./C42e00jK.js";import"./DlAUqK2U.js";const l=a({__name:"index",setup(_){const o=n();return c(async()=>{await o.loadInvoicesFromStorage()}),(i,p)=>{const e=t;return s(),r(e,{page:"invoices"})}}});export{l as default};
