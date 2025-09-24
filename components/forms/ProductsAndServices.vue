@@ -1,20 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useInvoiceStore } from '~/stores/invoiceStore';
-import type { InvoiceItem, UoM, VAT } from '~/types';
+import type { UoM, VAT } from '~/types';
+import { useInvoiceCalculations } from '~/composables/useInvoiceCalculations';
 
 const invoiceStore = useInvoiceStore();
+const calculations = useInvoiceCalculations(ref(invoiceStore.invoiceFormData));
+
 const isSelectorOpen = ref(false);
 
 const tableHeaderClass = 'text-left p-1 text-sm font-medium text-foreground';
-
-const calculateAmount = (item: InvoiceItem) => {
-  const individualDiscount = (1 - (item?.discount ?? 0) / 100);
-  const generalDiscount = (1 - invoiceStore.invoiceFormData.discount / 100);
-  const vat = (1 + Number(item.vat.replace('%', '')) / 100);
-
-  return Math.round(item.quantity * item.pricePerUnit * individualDiscount * generalDiscount * vat);
-};
 
 const addNewLine = () => {
   invoiceStore.addInvoiceItem();
@@ -126,7 +121,7 @@ const addDiscount = () => {
                   type="number"
                   class="h-8 text-sm"
                   readonly
-                  :model-value="calculateAmount(item)"
+                  :model-value="calculations.calculateAmount(item, invoiceStore.invoiceFormData.discount)"
                 />
               </td>
               <td class="p-1">
@@ -306,7 +301,7 @@ const addDiscount = () => {
                 type="number"
                 class="h-10 text-sm"
                 readonly
-                :model-value="calculateAmount(item)"
+                :model-value="calculations.calculateAmount(item, invoiceStore.invoiceFormData.discount)"
               />
             </div>
           </div>

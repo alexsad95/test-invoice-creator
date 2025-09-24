@@ -2,7 +2,8 @@ import { defineStore } from 'pinia';
 import { ref, computed, watch } from 'vue';
 import { randomUUID, getTodayDate } from '~/utils/helpers';
 import { setLocalStorageItem, getLocalStorageItem, removeLocalStorageItem, STORAGE_KEYS } from '~/utils/localStorage';
-import { useInvoiceCalculations, useUIState } from '~/composables';
+import { useUIState } from '~/composables/useUIState';
+import { useInvoiceCalculations } from '~/composables/useInvoiceCalculations';
 import type { Invoice, InvoiceItem, InvoiceFormData } from '~/types';
 
 export const useInvoiceStore = defineStore('invoice', () => {
