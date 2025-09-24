@@ -16,7 +16,7 @@ const invoices = computed(() => invoiceStore.invoices);
 const isLoading = computed(() => invoiceStore.isLoading);
 
 // Common styles for main blocks
-const mainStyles = 'container mx-auto w-full flex-1 flex gap-4 justify-center px-4 py-8';
+const mainStyles = 'container mx-auto w-full flex-1 flex gap-4 justify-center px-6 py-8';
 </script>
 
 <template>

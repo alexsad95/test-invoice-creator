@@ -19,7 +19,7 @@ const selectedCurrency = ref<'USD' | 'EUR' | 'MDL'>('USD');
 const selectedLanguage = ref<'English' | 'Russian' | 'Română'>('English');
 
 const headerStyles = 'bg-background shadow-2xl';
-const headerContentStyles = 'container h-20 mx-auto px-4 flex justify-between items-center';
+const headerContentStyles = 'container h-20 mx-auto px-6 flex justify-between items-center';
 
 const handleSaveInvoice = () => {
   invoiceStore.openSheet();
